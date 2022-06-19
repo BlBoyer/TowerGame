@@ -18,20 +18,48 @@ public class BattleManager : MonoBehaviour
         }
     }
     private string nextScene;
-    private IEnumerator battleState;
+    //private IEnumerator battleState;
     private bool running;
     private bool atIdle;
     private bool atAttack;
-    private Fighter player;
-    private Fighter enemy;
+    private float attackDur;
     public GameObject playerPrefab; //we put a prefab here so we can instantiate it
     public GameObject enemyPrefab; //this will be a NonSerialized public variable later, or just make a private method
     public Transform playerStart;
     public Transform enemyStart;
-    //flesh out the IEnumerator in start with initialized values, such as enemy, etc
+    //ideally we'd use an async to wait and use an awaiter for our animations
+    IEnumerator battlestate()
+        {
+                //use values from args
+                //movePlayersTowardsOppositeSides()
+            if (running)
+            {
+                //move towards opposite sides
+                yield return null; //resume next frame, or wait for frames over time;
+            }
+            else if (atIdle)
+            {
+                //play idle animations for parties
+                yield return new WaitForSeconds(3);
+            }
+            else if (atAttack)
+            {
+                yield return new WaitForSeconds(attackDur);
+            }
+        }
     void Awake()
     {
         _instance = this;
+    }
+    //get enemyPrefab by enemy thac calls battle, we can change this variable from that script directly
+    //we may needs to call this from another script instead
+    void Start()
+    {
+        //get vals that we use in our coroutine
+        //get characters
+        GameObject loadedPlayer = Instantiate(playerPrefab, playerStart);
+        GameObject loadedEnemy = Instantiate(enemyPrefab, enemyStart);
+        StartCoroutine(battlestate());
     }
     void FixedUpdate()
     {
@@ -46,47 +74,16 @@ public class BattleManager : MonoBehaviour
         //calculate outcome
         //assign animations
     }
-        //get enemyPrefab by enemy thac calls battle, we can change this variable from that script directly
-        //then we will call this method
-    private void SartBattle()
-    {
-        //get vals that we use in our coroutine
-        //get characters
-        GameObject loadedPlayer = Instantiate(playerPrefab, playerStart);
-        GameObject loadedEnemy = Instantiate(enemyPrefab, enemyStart);
-        player = loadedPlayer.GetComponent<Fighter>();
-        enemy  = loadedEnemy.GetComponent<Fighter>();
-        //instantiate battle
-        battleState = new IEnumerator()
-        {
-            //use values from args
-            //movePlayersTowardsOppositeSides()
-            if (running)
-            {
-                //move towards opposite sides
-                yield return null; //resume next frame, or wait for frames over time;
-            }
-            else if (atIdle)
-            {
-                //play idle animations for parties
-                yield return WaitForSeconds(3);
-            }
-            else if (atAttack)
-            {
-                yield return WaitForSeconds(attackDur);
-            }
-        }
-    }
-    void ProcessInputs() 
+    private void ProcessInputs() 
     {
         //take variables from ui
         //list possible animations
     }
-    void Calculate() 
+    private void Calculate() 
     {
         //if (battleisover){_nextScene = "VerticalSlice", this.End()}
     }
-    void End() 
+    private void End() 
     {
     //the reason we have a sep method for setting the scene is to be able to check the scene we're in, once we have set it, we can access it
         GameManager.instance.setScene(nextScene);
