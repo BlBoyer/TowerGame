@@ -10,8 +10,10 @@ public class PlayerMovement : MonoBehaviour
     private float speedVar;
     private float hInput;
     private float vInput;
+    private int _playerHealth;
     void Start()
     {
+        _playerHealth = this.GetComponent<Fighter>().health;
         
     }
 
@@ -20,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     {
         ProcessInputs();
         Move();
+        Debug.Log(_playerHealth);
     }
     private void ProcessInputs() 
     {
