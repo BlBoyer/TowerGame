@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     // Start is called before the first frame update
     public Transform PlayerT;
+    public Animator anim;
     [Range(0, 5)]
     public int moveSpeed;
     private float speedVar;
@@ -21,7 +22,16 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         ProcessInputs();
-        Move();
+        if (hInput != 0 || vInput != 0)
+        {
+            Move();
+            Emote();
+        }
+        else 
+        {
+            anim.Play("player_idle");
+
+        }
         Debug.Log(_playerHealth);
     }
     private void ProcessInputs() 
@@ -40,5 +50,25 @@ public class PlayerMovement : MonoBehaviour
         }
         var currentPos = new Vector3(PlayerT.position.x, PlayerT.position.y, PlayerT.position.z);
         PlayerT.position = currentPos + new Vector3(hInput, vInput, 0) * speedVar;
+    }
+    private void Emote()
+    {
+        if (hInput > 0) 
+        {
+            anim.Play("walk_right");
+        }
+        if (hInput < 0)
+        {
+            anim.Play("walk_left");
+        }
+        if (vInput > 0)
+        {
+            anim.Play("walk_up");
+        }
+        if (vInput < 0)
+        {
+            anim.Play("walk_down");
+        }
+
     }
 }

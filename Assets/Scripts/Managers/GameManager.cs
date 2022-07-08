@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
     [System.NonSerialized] public static List<string> _scenes = new List<string>()
     {
         "begin",
-         "VerticalSlice",
-         "level2"
+        "VerticalSlice",
+        "level2"
     };
     private static string _currentScene = _scenes[0];
     void Awake()
