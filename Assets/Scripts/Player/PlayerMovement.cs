@@ -11,11 +11,12 @@ public class PlayerMovement : MonoBehaviour
     private float speedVar;
     private float hInput;
     private float vInput;
+    private string walk_dir;
     private int _playerHealth;
     void Start()
     {
         _playerHealth = this.GetComponent<Fighter>().health;
-        
+
     }
 
     // Update is called once per frame
@@ -32,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
             anim.Play("player_idle");
 
         }
-        Debug.Log(_playerHealth);
+        //Debug.Log(_playerHealth);
     }
     private void ProcessInputs() 
     {
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Move()
     {
-        if (hInput > 0 && vInput > 0)
+        if (hInput != 0 && vInput != 0)
         {
             speedVar = moveSpeed * .7f;
         } else 
@@ -51,23 +52,42 @@ public class PlayerMovement : MonoBehaviour
         var currentPos = new Vector3(PlayerT.position.x, PlayerT.position.y, PlayerT.position.z);
         PlayerT.position = currentPos + new Vector3(hInput, vInput, 0) * speedVar;
     }
+    //change this so that if walking one direction and then change direction the current face direction doesn't change
     private void Emote()
     {
+        //get the current animation clip, if we're moving still
+        walk_dir = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+
+        //if we're stoppes, or going the same direction but with new diagonal input, play clip 
+
         if (hInput > 0) 
         {
-            anim.Play("walk_right");
+            if (walk_dir == "player_idle" || walk_dir == "walk_right" && vInput != 0)
+            {
+                anim.Play("walk_right");
+            }
+
         }
-        if (hInput < 0)
+        else if (hInput < 0)
         {
-            anim.Play("walk_left");
+            if (walk_dir == "player_idle" || walk_dir == "walk_left" && vInput != 0)
+            {
+                anim.Play("walk_left");
+            }
         }
-        if (vInput > 0)
+        else if (vInput > 0)
         {
-            anim.Play("walk_up");
+            if (walk_dir == "player_idle" || walk_dir == "walk_up" && hInput != 0)
+            {
+                anim.Play("walk_up");
+            }
         }
-        if (vInput < 0)
+        else if (vInput < 0)
         {
-            anim.Play("walk_down");
+            if (walk_dir == "player_idle" || walk_dir == "walk_down" && hInput != 0)
+            {
+                anim.Play("walk_down");
+            }
         }
 
     }
