@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private float speedVar;
     private float hInput;
     private float vInput;
+    private string walk_dir;
     private int _playerHealth;
     void Start()
     {
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Move()
     {
-        if (hInput > 0 && vInput > 0)
+        if (hInput != 0 && vInput != 0)
         {
             speedVar = moveSpeed * .7f;
         } else 
@@ -51,21 +52,23 @@ public class PlayerMovement : MonoBehaviour
         var currentPos = new Vector3(PlayerT.position.x, PlayerT.position.y, PlayerT.position.z);
         PlayerT.position = currentPos + new Vector3(hInput, vInput, 0) * speedVar;
     }
+    //change this so that if walking one direction and then change direction the current face direction doesn't change
     private void Emote()
     {
-        if (hInput > 0) 
+        if (hInput > 0 && vInput == 0) 
         {
             anim.Play("walk_right");
+
         }
-        if (hInput < 0)
+        else if (hInput < 0 && vInput == 0)
         {
             anim.Play("walk_left");
         }
-        if (vInput > 0)
+        else if (vInput > 0 && hInput == 0)
         {
             anim.Play("walk_up");
         }
-        if (vInput < 0)
+        else if (vInput < 0 && hInput == 0)
         {
             anim.Play("walk_down");
         }
