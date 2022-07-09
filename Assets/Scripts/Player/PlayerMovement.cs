@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _playerHealth = this.GetComponent<Fighter>().health;
-        
+
     }
 
     // Update is called once per frame
@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
             anim.Play("player_idle");
 
         }
-        Debug.Log(_playerHealth);
+        //Debug.Log(_playerHealth);
     }
     private void ProcessInputs() 
     {
@@ -55,22 +55,39 @@ public class PlayerMovement : MonoBehaviour
     //change this so that if walking one direction and then change direction the current face direction doesn't change
     private void Emote()
     {
-        if (hInput > 0 && vInput == 0) 
+        //get the current animation clip, if we're moving still
+        walk_dir = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+
+        //if we're stoppes, or going the same direction but with new diagonal input, play clip 
+
+        if (hInput > 0) 
         {
-            anim.Play("walk_right");
+            if (walk_dir == "player_idle" || walk_dir == "walk_right" && vInput != 0)
+            {
+                anim.Play("walk_right");
+            }
 
         }
-        else if (hInput < 0 && vInput == 0)
+        else if (hInput < 0)
         {
-            anim.Play("walk_left");
+            if (walk_dir == "player_idle" || walk_dir == "walk_left" && vInput != 0)
+            {
+                anim.Play("walk_left");
+            }
         }
-        else if (vInput > 0 && hInput == 0)
+        else if (vInput > 0)
         {
-            anim.Play("walk_up");
+            if (walk_dir == "player_idle" || walk_dir == "walk_up" && hInput != 0)
+            {
+                anim.Play("walk_up");
+            }
         }
-        else if (vInput < 0 && hInput == 0)
+        else if (vInput < 0)
         {
-            anim.Play("walk_down");
+            if (walk_dir == "player_idle" || walk_dir == "walk_down" && hInput != 0)
+            {
+                anim.Play("walk_down");
+            }
         }
 
     }
