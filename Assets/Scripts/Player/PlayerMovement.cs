@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] float characterSpeed = 4f;
     // Start is called before the first frame update
     public Transform PlayerT;
     public Animator anim;
@@ -28,24 +29,25 @@ public class PlayerMovement : MonoBehaviour
             Move();
             Emote();
         }
-        else 
+        else
         {
             anim.Play("player_idle");
 
         }
         //Debug.Log(_playerHealth);
     }
-    private void ProcessInputs() 
+    private void ProcessInputs()
     {
-        hInput = Input.GetAxisRaw("Horizontal") * .01f;
-        vInput = Input.GetAxisRaw("Vertical") * .01f;
+        hInput = Input.GetAxisRaw("Horizontal") * characterSpeed * Time.deltaTime;
+        vInput = Input.GetAxisRaw("Vertical") * characterSpeed * Time.deltaTime;
     }
     private void Move()
     {
         if (hInput != 0 && vInput != 0)
         {
             speedVar = moveSpeed * .7f;
-        } else 
+        }
+        else
         {
             speedVar = moveSpeed;
         }
@@ -60,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
         //if we're stoppes, or going the same direction but with new diagonal input, play clip 
 
-        if (hInput > 0) 
+        if (hInput > 0)
         {
             if (walk_dir == "player_idle" || walk_dir == "walk_right" && vInput != 0)
             {
