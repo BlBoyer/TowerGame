@@ -13,7 +13,7 @@ TagManager:
   - UI
   - Player
   - Map
-  - 
+  - Interactives
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: characters
     uniqueID: 2352704443
+    locked: 0
+  - name: interactives
+    uniqueID: 4184433145
     locked: 0

@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
         //get the current animation clip, if we're moving still
         walk_dir = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
-        //if we're stoppes, or going the same direction but with new diagonal input, play clip 
+        //if we're stopped, or going the same direction but with new diagonal input, play clip 
 
         if (hInput > 0) 
         {
