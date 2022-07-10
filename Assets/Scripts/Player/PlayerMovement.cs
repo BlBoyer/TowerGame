@@ -6,12 +6,12 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     public Transform PlayerT;
     public Animator anim;
-    [Range(0, 5)]
+    [Range(0, 9)]
     public int moveSpeed;
     private float speedVar;
     private float hInput;
     private float vInput;
-    private string walk_dir;
+    private string walk_dir = "player_idle";
     private int _playerHealth;
     void Start()
     {
@@ -25,20 +25,19 @@ public class PlayerMovement : MonoBehaviour
         ProcessInputs();
         if (hInput != 0 || vInput != 0)
         {
+            anim.SetBool("isMoving", true);
             Move();
             Emote();
         }
-        else 
+        else if (hInput == 0 && vInput == 0)
         {
             anim.Play("player_idle");
-
         }
-        //Debug.Log(_playerHealth);
     }
     private void ProcessInputs() 
     {
-        hInput = Input.GetAxisRaw("Horizontal") * .01f;
-        vInput = Input.GetAxisRaw("Vertical") * .01f;
+        hInput = Input.GetAxisRaw("Horizontal"); //* .1f;
+        vInput = Input.GetAxisRaw("Vertical"); //* .1f;
     }
     private void Move()
     {
@@ -50,45 +49,44 @@ public class PlayerMovement : MonoBehaviour
             speedVar = moveSpeed;
         }
         var currentPos = new Vector3(PlayerT.position.x, PlayerT.position.y, PlayerT.position.z);
-        PlayerT.position = currentPos + new Vector3(hInput, vInput, 0) * speedVar;
+        PlayerT.position = currentPos + new Vector3(hInput, vInput, 0) * speedVar * Time.deltaTime;
     }
     //change this so that if walking one direction and then change direction the current face direction doesn't change
     private void Emote()
     {
-        //get the current animation clip, if we're moving still
+        //get the current animation clip
         walk_dir = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
-        //if we're stopped, or going the same direction but with new diagonal input, play clip 
+        //if we're stopped, going the opposite direction, or going the same direction but with new diagonal input, play clip 
 
-        if (hInput > 0) 
+        if (hInput > 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_right" && vInput != 0)
+            if (walk_dir == "player_idle" || walk_dir == "walk_left" || walk_dir == "walk_right")
             {
-                anim.Play("walk_right");
+                walk_dir = "walk_right";
             }
-
         }
         else if (hInput < 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_left" && vInput != 0)
+            if (walk_dir == "player_idle" || walk_dir == "walk_right" || walk_dir == "walk_left")
             {
-                anim.Play("walk_left");
+                walk_dir = "walk_left";
             }
         }
         else if (vInput > 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_up" && hInput != 0)
+            if (walk_dir == "player_idle" || walk_dir == "walk_down" || walk_dir == "walk_up")
             {
-                anim.Play("walk_up");
+                walk_dir = "walk_up";
             }
         }
         else if (vInput < 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_down" && hInput != 0)
+            if (walk_dir == "player_idle" || walk_dir == "walk_up" || walk_dir == "walk_down")
             {
-                anim.Play("walk_down");
+                walk_dir = "walk_down";
             }
         }
-
+        anim.Play(walk_dir);
     }
 }

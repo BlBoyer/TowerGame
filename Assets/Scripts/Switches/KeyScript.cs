@@ -7,8 +7,11 @@ public class KeyScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player")) 
         {
+
+            //we may change this from gameObject to gameObject.name
             masterKey.GetComponent<KeyBuilder>().addKey(gameObject);
-            GetComponent<Collider2D>().enabled = false;
+            //GetComponent<Collider2D>().enabled = false;
+            gameObject.SetActive(false);
         }
     }
 }

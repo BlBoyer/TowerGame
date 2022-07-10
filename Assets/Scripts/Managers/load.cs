@@ -9,7 +9,7 @@ public class load : MonoBehaviour
     {
         //GameManager.Instantiate<GameManager>(GameManager.instance);
         GameManager.instance.setScene("begin");
-        GameManager.instance.changeScene();
+        GameManager.instance.changeScene(null);
     }
 
     // Update is called once per frame

@@ -6,6 +6,7 @@ using UnityEngine;
 public class ExitScript : MonoBehaviour
 {
     //get keys for unlocking this door
+    //Make sure that all keys are attached to the corresponding exitDoor if assertion fails in console log
     public List<GameObject> keyParts;
 
     //get Master key for this dungeon
@@ -18,8 +19,13 @@ public class ExitScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Player") && keyParts.SequenceEqual(masterKey.GetComponent<KeyBuilder>().keys))
         {
             Debug.Log("we've collided with the exit door and our keys match up");
+            //destroy keys here, we can re-instantiate the prefabs at another time if we want to do that, or, we can just leave the door unlocked
+            foreach (var key in keyParts) 
+            {
+                Object.Destroy(key.gameObject);
+            }
             GameManager.instance.setScene("level2");
-            GameManager.instance.changeScene();
+            GameManager.instance.changeScene("VerticalSlice");
         }
     }
 }
