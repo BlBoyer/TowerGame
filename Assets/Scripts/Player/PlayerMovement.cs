@@ -7,24 +7,23 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     public Transform PlayerT;
     public Animator anim;
+    //public GameObject renderComponent;
     private SpriteRenderer _spriteRenderer;
     private Sprite[] _spriteLib;
+    private Sprite _thisSprite;
     [Range(0, 9)]
     public int moveSpeed;
     private float speedVar;
     private float hInput;
     private float vInput;
     private string walk_dir = "player_idle";
-    private int _playerHealth;
+    //private int _playerHealth;
     void Start()
     {
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _spriteLib = GetComponentInChildren<SpriteLib>().spriteArray;
-        _playerHealth = GetComponent<Fighter>().health;
-        foreach (var item in _spriteLib)
-        {
-            Debug.Log(item.name);
-        }
+        _thisSprite = _spriteLib[1];
+       //_playerHealth = GetComponent<Fighter>().health;
 
     }
 
@@ -34,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
         ProcessInputs();
         if (hInput != 0 || vInput != 0)
         {
+            anim.enabled = true;
             anim.SetBool("isMoving", true);
             Move();
             Emote();
@@ -41,7 +41,12 @@ public class PlayerMovement : MonoBehaviour
         else if (hInput == 0 && vInput == 0)
         {
             anim.SetBool("isMoving", false);
-            anim.Play("player_idle");
+            //anim.Play("player_idle");
+            anim.StopPlayback();
+            anim.enabled = false;
+            //set Sprite here
+            _spriteRenderer.sprite = _thisSprite;
+            Debug.Log(_spriteRenderer.sprite);
         }
     }
     private void ProcessInputs() 
@@ -71,23 +76,24 @@ public class PlayerMovement : MonoBehaviour
         if (hInput > 0)
         {
             walk_dir = "walk_right";
-            _spriteRenderer.sprite = _spriteLib[2];
+            _thisSprite = _spriteLib[2];
+            //Debug.Log(GetComponentInChildren<SpriteRenderer>().sprite.name);
         }
         else if (hInput < 0)
         {
             walk_dir = "walk_left";
-            _spriteRenderer.sprite = _spriteLib[0];
+            _thisSprite = _spriteLib[0];
         }
-        //vertical movement
+        //vertical movemente
         else if (vInput > 0)
         {
             walk_dir = "walk_up";
-            _spriteRenderer.sprite = _spriteLib[1];
+            _thisSprite = _spriteLib[3];
         }
         else if (vInput < 0)
         {
             walk_dir = "walk_down";
-            _spriteRenderer.sprite = _spriteLib[3];
+            _thisSprite = _spriteLib[1];
         }
         //if nothing changed play the last animation clip
         anim.Play(walk_dir);
