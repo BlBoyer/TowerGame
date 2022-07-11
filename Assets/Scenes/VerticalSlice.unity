@@ -430,17 +430,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1337366679}
     m_Modifications:
+    - target: {fileID: 888876948, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 230046147915864232, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 230046147915864232, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.12323
+      value: 3.87677
       objectReference: {fileID: 0}
     - target: {fileID: 230046147915864232, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.0272845
+      value: 0.22271919
       objectReference: {fileID: 0}
     - target: {fileID: 230046147915864232, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -482,6 +486,10 @@ PrefabInstance:
       propertyPath: masterKey
       value: 
       objectReference: {fileID: 6469170965229105530}
+    - target: {fileID: 9090413455721999837, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
+      propertyPath: textBox
+      value: 
+      objectReference: {fileID: 1486419911}
     - target: {fileID: 9090413455721999837, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: textRenderer
       value: 
@@ -25868,6 +25876,11 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1 &1486419911 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 888876948, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
+  m_PrefabInstance: {fileID: 917262415}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1494781419
 GameObject:
   m_ObjectHideFlags: 0
@@ -26038,11 +26051,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 230046147915864232, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.3885632
+      value: -14.888563
       objectReference: {fileID: 0}
     - target: {fileID: 230046147915864232, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5273417
+      value: -18.722658
       objectReference: {fileID: 0}
     - target: {fileID: 230046147915864232, guid: 28f1b236f8b683144b0cacf25d10f3dc, type: 3}
       propertyPath: m_LocalPosition.z
