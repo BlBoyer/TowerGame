@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 //mapbox unity sdk for 3D worlds
 
@@ -5,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     // Start is called before the first frame update
     public Transform PlayerT;
+    private Rigidbody2D _rb;
     public Animator anim;
     [Range(0, 9)]
     public int moveSpeed;
@@ -15,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private int _playerHealth;
     void Start()
     {
+        _rb = GetComponent<Rigidbody2D>();
         _playerHealth = this.GetComponent<Fighter>().health;
 
     }
@@ -31,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (hInput == 0 && vInput == 0)
         {
+            anim.SetBool("isMoving", false);
             anim.Play("player_idle");
         }
     }
@@ -56,37 +60,25 @@ public class PlayerMovement : MonoBehaviour
     {
         //get the current animation clip
         walk_dir = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-
-        //if we're stopped, going the opposite direction, or going the same direction but with new diagonal input, play clip 
-
+        //horizontal input, ignore if up or down
         if (hInput > 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_left" || walk_dir == "walk_right")
-            {
-                walk_dir = "walk_right";
-            }
+            walk_dir = "walk_right";
         }
         else if (hInput < 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_right" || walk_dir == "walk_left")
-            {
-                walk_dir = "walk_left";
-            }
+            walk_dir = "walk_left";
         }
-        else if (vInput > 0)
+        //vertical movement
+        if (vInput > 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_down" || walk_dir == "walk_up")
-            {
-                walk_dir = "walk_up";
-            }
+            walk_dir = "walk_up";
         }
         else if (vInput < 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_up" || walk_dir == "walk_down")
-            {
-                walk_dir = "walk_down";
-            }
+            walk_dir = "walk_down";
         }
+        //if nothing changed play the last animation clip
         anim.Play(walk_dir);
     }
 }
