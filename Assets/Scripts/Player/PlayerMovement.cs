@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     public Transform PlayerT;
     public Animator anim;
+    private SpriteRenderer _spriteRenderer;
+    private Sprite[] _spriteLib;
     [Range(0, 9)]
     public int moveSpeed;
     private float speedVar;
@@ -16,7 +18,13 @@ public class PlayerMovement : MonoBehaviour
     private int _playerHealth;
     void Start()
     {
-        _playerHealth = this.GetComponent<Fighter>().health;
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _spriteLib = GetComponentInChildren<SpriteLib>().spriteArray;
+        _playerHealth = GetComponent<Fighter>().health;
+        foreach (var item in _spriteLib)
+        {
+            Debug.Log(item.name);
+        }
 
     }
 
@@ -63,19 +71,23 @@ public class PlayerMovement : MonoBehaviour
         if (hInput > 0)
         {
             walk_dir = "walk_right";
+            _spriteRenderer.sprite = _spriteLib[2];
         }
         else if (hInput < 0)
         {
             walk_dir = "walk_left";
+            _spriteRenderer.sprite = _spriteLib[0];
         }
         //vertical movement
         else if (vInput > 0)
         {
             walk_dir = "walk_up";
+            _spriteRenderer.sprite = _spriteLib[1];
         }
         else if (vInput < 0)
         {
             walk_dir = "walk_down";
+            _spriteRenderer.sprite = _spriteLib[3];
         }
         //if nothing changed play the last animation clip
         anim.Play(walk_dir);

@@ -20111,6 +20111,28 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!1 &1259416843 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5231301889358542555, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
+  m_PrefabInstance: {fileID: 5231301891012403768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1259416847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259416843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5efe2890ca723445af161904421c5f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteArray:
+  - {fileID: -325846096, guid: 8541af4f016054944b8acf5f99ef8abc, type: 3}
+  - {fileID: 732202142, guid: 8541af4f016054944b8acf5f99ef8abc, type: 3}
+  - {fileID: 215597611, guid: 8541af4f016054944b8acf5f99ef8abc, type: 3}
+  - {fileID: -1144546224, guid: 8541af4f016054944b8acf5f99ef8abc, type: 3}
 --- !u!1 &1337366678
 GameObject:
   m_ObjectHideFlags: 0
@@ -26088,9 +26110,25 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5231301889358542557, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
+      propertyPath: m_Size.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5231301889358542557, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 732202142, guid: 8541af4f016054944b8acf5f99ef8abc, type: 3}
+    - target: {fileID: 5231301889358542557, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5231301889358542557, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5231301891188017736, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
       propertyPath: moveSpeed
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5231301891188017747, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
       propertyPath: m_Name
