@@ -44,9 +44,9 @@ TagManager:
   - name: map
     uniqueID: 3447398777
     locked: 0
-  - name: characters
-    uniqueID: 2352704443
-    locked: 0
   - name: interactives
     uniqueID: 4184433145
+    locked: 0
+  - name: characters
+    uniqueID: 2352704443
     locked: 0
