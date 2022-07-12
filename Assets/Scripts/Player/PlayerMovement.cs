@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
             anim.enabled = false;
             //set Sprite here
             _spriteRenderer.sprite = _thisSprite;
-            Debug.Log(_spriteRenderer.sprite);
+            //Debug.Log(_spriteRenderer.sprite);
         }
     }
     private void ProcessInputs() 

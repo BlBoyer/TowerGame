@@ -20,6 +20,7 @@ public class ExitScript : MonoBehaviour
         {
             Debug.Log("we've collided with the exit door and our keys match up");
             //destroy keys here, we can re-instantiate the prefabs at another time if we want to do that, or, we can just leave the door unlocked
+            //unloadgin the scene will take care of this for us
             foreach (var key in keyParts) 
             {
                 Object.Destroy(key.gameObject);

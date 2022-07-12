@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &888876949
 RectTransform:
   m_ObjectHideFlags: 0
@@ -248,8 +248,7 @@ GameObject:
   - component: {fileID: 230046147915864232}
   - component: {fileID: 230046147915864235}
   - component: {fileID: -2251681929928888305}
-  - component: {fileID: 9090413455721999837}
-  - component: {fileID: 6112755303735641733}
+  - component: {fileID: 121860243489862783}
   m_Layer: 8
   m_Name: Key
   m_TagString: Untagged
@@ -341,7 +340,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
---- !u!114 &9090413455721999837
+--- !u!114 &121860243489862783
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -350,22 +349,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 230046147915864234}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5e707d043e0e543b8712fdbf511334, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b5d5b995770c074ea921fa153ec24c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textBox: {fileID: 888876948}
---- !u!114 &6112755303735641733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230046147915864234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f0b5234d7488b4ba50621778f12d92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  interactionBox: {fileID: 888876948}
   masterKey: {fileID: 0}
 --- !u!1 &5219316094890187272
 GameObject:

@@ -10,7 +10,9 @@ public class KeyScript : MonoBehaviour
     public GameObject masterKey;
     private void Update()
     {
-        if (GetComponent<PickUpable>().pickedUp)
-        masterKey.GetComponent<KeyBuilder>().addKey(gameObject);
+        if (GetComponent<InvItem>().dirty)
+        {
+            masterKey.GetComponent<KeyBuilder>().addKey(gameObject);
+        }
     }
 }
