@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2737925225107873866}
   - component: {fileID: 2737925225107873868}
   - component: {fileID: 2737925225107873870}
-  - component: {fileID: 2737925225107873871}
+  - component: {fileID: 1884125875955419631}
   m_Layer: 8
   m_Name: LootChest
   m_TagString: Untagged
@@ -113,7 +113,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.8}
   m_EdgeRadius: 0
---- !u!114 &2737925225107873871
+--- !u!114 &1884125875955419631
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,10 +122,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2737925225107873867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5fa25ce6ad13a84fa312ebf850671cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 18f81e66bbfa5d746a45ed0b07c6f65f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionBox: {fileID: 0}
+  interactionBox: {fileID: 4741405624051281779}
 --- !u!1001 &4758535837081361627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,6 +227,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6fed0d3831f70924dbf53119f28c6b88, type: 3}
+--- !u!1 &4741405624051281779 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 271742557358060456, guid: 6fed0d3831f70924dbf53119f28c6b88, type: 3}
+  m_PrefabInstance: {fileID: 4758535837081361627}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6002958582245485999 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1245100330080579956, guid: 6fed0d3831f70924dbf53119f28c6b88, type: 3}

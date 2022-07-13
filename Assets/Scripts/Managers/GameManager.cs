@@ -1,59 +1,26 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-#nullable enable
+//This is the script we will be using to load, modify, and save game data
 public class GameManager : MonoBehaviour
 {
-    private static GameManager _instance;
-    public static GameManager instance 
+    //reference all gameobjects and scripts with saveable variables, any variable that gets modified in-game ONLY, should be modified by individual scripts
+    //i.e. the player, the current scene, stores, instantiated objects in current scene
+
+    // Start - LoadGame is called before the first frame update
+    void Start()
     {
-        get 
-        {
-            if (_instance == null) 
-            {
-                GameObject manager = new GameObject("GameManager");
-                manager.AddComponent<GameManager>();
-            }
-            return _instance;
-        }
+        //initialize save data
+        ReadGameData();
     }
-    [System.NonSerialized] public static List<string> _scenes = new List<string>()
+    void SaveGameData() 
     {
-        "begin",
-        "VerticalSlice",
-        "level2"
-    };
-    private static string _currentScene = _scenes[0];
-    //prefabs
-    public GameObject playerPrefab;
-    void Awake()
-    {
-        _instance = this;
+        //save game data, we need all variables here, all gameobjects with scripts that contain modded fields need added to game manager
+        //this should create the instance of InventoryManager, by calling InventoryManager.AddItem()
     }
-    public void setScene(string name) 
+    void ReadGameData() 
     {
-        if (_scenes.Contains(name))
-        {
-            _currentScene = _scenes[_scenes.IndexOf(name)];
-        }
-        else 
-        {
-            Debug.Log("Scene doesn't exist");
-        }
+        //make sure we readData, new game start-up should create the data file
     }
-    public void changeScene(string? exitingScene) 
-    {
-        SceneManager.LoadScene(_currentScene);
-        if (exitingScene != null) 
-        {
-            SceneManager.UnloadSceneAsync(exitingScene);
-        }
-    }
-    //put scene logic here, start points etc, or make a child scene management object with the info there, and pass it the value of the current scene from there
-    //called from exitScript instance
-    private void initScene2() 
-    {
-        //init player
-        //public static Object Instantiate(playerPrefab, Transform parent, bool instantiateInWorldSpace);
-    }
+
 }

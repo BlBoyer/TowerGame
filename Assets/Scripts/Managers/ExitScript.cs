@@ -25,8 +25,8 @@ public class ExitScript : MonoBehaviour
             {
                 Object.Destroy(key.gameObject);
             }
-            GameManager.instance.setScene("level2");
-            GameManager.instance.changeScene("VerticalSlice");
+            ExitManager.instance.setScene("level2");
+            ExitManager.instance.changeScene("VerticalSlice");
         }
     }
 }

@@ -10,7 +10,7 @@ public class KeyScript : MonoBehaviour
     public GameObject masterKey;
     private void Update()
     {
-        if (GetComponent<InvItem>().dirty)
+        if (GetComponent<KeyItem>().dirty)
         {
             masterKey.GetComponent<KeyBuilder>().addKey(gameObject);
         }

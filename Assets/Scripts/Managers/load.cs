@@ -8,13 +8,7 @@ public class load : MonoBehaviour
     void Start()
     {
         //GameManager.Instantiate<GameManager>(GameManager.instance);
-        GameManager.instance.setScene("begin");
-        GameManager.instance.changeScene(null);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        ExitManager.instance.setScene("begin");
+        ExitManager.instance.changeScene(null);
     }
 }
