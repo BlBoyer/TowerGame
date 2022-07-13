@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //we should definitely abstract the loot class and have our diff types to pass in LootItem
-/*public class LootGold : LootItem
+public class LootGold : LootItem
 {
     //protected override PlayerItem itemToAdd { get; set; }
     public List<Gold> lootList = new() {
@@ -13,9 +13,9 @@ using UnityEngine;
         new Gold(){ Amount = 40},
         new Gold(){ Amount = 1}
     };
-    protected override void SelectLoot()
+    protected override PlayerItem SelectLoot()
     {
         var randInd = Random.value * lootList.Count;
-        itemToAdd = lootList[(int)randInd];
+        return lootList[(int)randInd];
     }
-}*/
+}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2737925225107873866}
   - component: {fileID: 2737925225107873868}
   - component: {fileID: 2737925225107873870}
-  - component: {fileID: 1884125875955419631}
+  - component: {fileID: 2524980153819383250}
   m_Layer: 8
   m_Name: LootChest
   m_TagString: Untagged
@@ -113,7 +113,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.8}
   m_EdgeRadius: 0
---- !u!114 &1884125875955419631
+--- !u!114 &2524980153819383250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2737925225107873867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18f81e66bbfa5d746a45ed0b07c6f65f, type: 3}
+  m_Script: {fileID: 11500000, guid: f5fa25ce6ad13a84fa312ebf850671cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   interactionBox: {fileID: 4741405624051281779}
