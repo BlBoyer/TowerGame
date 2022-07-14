@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
+    //we could just place the object in the scene in managers and not destroy it on onLoad
+    //Construction
     private static InventoryManager _instance;
     public static InventoryManager instance
     {
@@ -16,11 +18,16 @@ public class InventoryManager : MonoBehaviour
             return _instance;
         }
     }
+    //Declarations
+    public ArrayList inventory = new();
+
+    //Methods
     void Awake()
     {
         _instance = this;
+        //persist the manager through scene changes if we want
+        DontDestroyOnLoad(gameObject);
     }
-    public ArrayList inventory = new ();
     //this needs to be an item that is an InvItem
     //we need to display the list when opening inventory and call onInteract when selecting the entry which could be buttons or clickable fields
     /*void onInteract()
@@ -28,7 +35,7 @@ public class InventoryManager : MonoBehaviour
         //call item method from item class/record
     }*/
     //called from interactable/private method of game, needs passed an Object(invisible)
-    //however, if we render the object in inventory, then we should use a prefab instead of a class
+    //if we render the object in inventory we prob could add a sprite to the record
     public void AddToInv(PlayerItem item)
     {
         inventory.Add(item);

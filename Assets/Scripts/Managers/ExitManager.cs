@@ -24,12 +24,15 @@ public class ExitManager : MonoBehaviour
         "VerticalSlice",
         "level2"
     };
+    //we do need a reference to the current scene to save, it could be a method or an instance variable like this
     private static string _currentScene = _scenes[0];
     //prefabs
     public GameObject playerPrefab;
     void Awake()
     {
         _instance = this;
+        //persist the manager through scene changes
+        DontDestroyOnLoad(_instance.gameObject);
     }
     public void setScene(string name) 
     {
@@ -49,12 +52,5 @@ public class ExitManager : MonoBehaviour
         {
             SceneManager.UnloadSceneAsync(exitingScene);
         }
-    }
-    //put scene logic here, start points etc, or make a child scene management object with the info there, and pass it the value of the current scene from there
-    //called from exitScript instance
-    private void initScene2() 
-    {
-        //init player
-        //public static Object Instantiate(playerPrefab, Transform parent, bool instantiateInWorldSpace);
     }
 }
