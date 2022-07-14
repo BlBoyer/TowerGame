@@ -4,19 +4,6 @@ using UnityEngine.SceneManagement;
 #nullable enable
 public class ExitManager : MonoBehaviour
 {
-    private static ExitManager _instance;
-    public static ExitManager instance 
-    {
-        get 
-        {
-            if (_instance == null) 
-            {
-                GameObject manager = new GameObject("ExitManager");
-                manager.AddComponent<ExitManager>();
-            }
-            return _instance;
-        }
-    }
     //list game scenes here
     [System.NonSerialized] public static List<string> _scenes = new List<string>()
     {
@@ -28,11 +15,10 @@ public class ExitManager : MonoBehaviour
     private static string _currentScene = _scenes[0];
     //prefabs
     public GameObject playerPrefab;
-    void Awake()
+    private void Awake()
     {
-        _instance = this;
-        //persist the manager through scene changes
-        DontDestroyOnLoad(_instance.gameObject);
+        //persist the manager through scene changes, it works, but for some reason I log a warning in the console
+        DontDestroyOnLoad(gameObject);
     }
     public void setScene(string name) 
     {
@@ -47,8 +33,9 @@ public class ExitManager : MonoBehaviour
     }
     public void changeScene(string? exitingScene) 
     {
-        SceneManager.LoadScene(_currentScene);
-        if (exitingScene != null) 
+        //this may need to be a task to make sure it happens first
+        SceneManager.LoadSceneAsync(_currentScene);
+        if (exitingScene != null && SceneManager.GetActiveScene().name == _currentScene) 
         {
             SceneManager.UnloadSceneAsync(exitingScene);
         }
