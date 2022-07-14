@@ -19,7 +19,7 @@ public class ExitScript : MonoBehaviour
         List<GameObject> comparedKeys = keyParts.Intersect(masterKey.GetComponent<KeyBuilder>().keys).ToList();
         Debug.Assert(comparedKeys.SequenceEqual(keyParts), $"List didn't match, returned type: {comparedKeys.GetType()}");
         //check if the level's master key contains both keys, they will get added by the player picking them up, so the scene should contain the master key as a prop 
-        if (collision.gameObject.CompareTag("Player") && comparedKeys.SequenceEqual(keyParts));
+        if (collision.gameObject.CompareTag("Player") && comparedKeys.SequenceEqual(keyParts))
         {
             Debug.Log("we've collided with the exit door and our keys match up");
 
