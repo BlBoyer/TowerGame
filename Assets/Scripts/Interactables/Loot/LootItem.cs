@@ -14,7 +14,9 @@ public abstract class LootItem : InteractableObject
         //add to inventory with inventory manager service
         var itemToAdd = SelectLoot();
         Debug.Log(itemToAdd);
-        InventoryManager.instance.AddToInv(itemToAdd);
+        //the inventory manager needs to get the type of item and group by type
+        var manager = GameObject.FindWithTag("Inventory").GetComponent<InventoryManager>();
+        manager.AddToInv(itemToAdd);
         //send notification with player item details (member fields of an inventory class item like name and amount)
     }
     protected abstract PlayerItem SelectLoot();

@@ -10,7 +10,7 @@ public class GamePersistence : MonoBehaviour
         //Debug.Log(GameManager._gameName);
         //looks like we're not getting a referencce to the game manager
         //GameManager.instance.AddData("testData", new List<string>(){ "one", "two", "three" });
-        var data = GameObject.FindWithTag("Manager").GetComponent<GameManager>().GetData("testData");
+        var data = GameObject.FindWithTag("Manager").GetComponent<GameManager>().GetGameInfo("testData");
         var expectedList = (List<string>)data;
         Debug.Log(expectedList[0]);
         

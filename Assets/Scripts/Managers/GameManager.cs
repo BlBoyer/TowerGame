@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
-using System.Reflection;
 using UnityEngine;
 using Newtonsoft.Json;
 #nullable enable
@@ -11,132 +10,146 @@ using Newtonsoft.Json;
 public class GameManager : MonoBehaviour
 {
     //Construction
-    //member variable to set when selecting game to load, or creating new file, defaults to myGame
-    //maybe we make a method to set the instance variable
-    public static string _gameName { get; set; } = "myGame"!;
-    /*private static GameManager _instance;
-    public static GameManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                Debug.Log("Game Manager is NULL");
-                //add the manager under managers **
-                GameObject manager = new GameObject("GameManager");
-                manager.AddComponent<GameManager>();
-            }
-            return _instance;
-        }
-    }*/
+    //member variable to set when selecting game to load, or creating new file, defaults to myGame, don't allow created games to share the same name
+    //from main menu we limit ability to name games
     //ignore null objects when serializing data, use in full scope
     private static readonly JsonSerializerSettings _options = new() { NullValueHandling = NullValueHandling.Ignore };
 
     //Declarations
     /**need to change paths based on selected game instance**/
-    private static string dir_Path = Assembly.GetExecutingAssembly().Location;
-    private static string savePath = $"{dir_Path}/{_gameName}/save.JSON";
-    private static string tempPath = $"{dir_Path}/{_gameName}/temp.JSON";
-    private static string gameSavePath = $"{dir_Path}/{_gameName}/globals.JSON";
-    private static SortedList Data = new();
+    public static string? gameName { get; set; }
+    private static string dir_Path;
+    private static string savePath;
+    private static string gameSavePath;
+    private static SortedList PlayerData = new();
     private static SortedList GameData = new(); //only access by key, order doesn't matter
+    private bool playerDirty = false;
+    private bool gameDirty = false;
 
     //Methods
     private void Awake()
     {
         //persist GameManager
         DontDestroyOnLoad(gameObject);
+        //get data path
+        if (gameName == null) 
+        {
+            gameName = "myGame";
+        }
+        dir_Path = $"{Application.dataPath}/{gameName}";
+        savePath = $"{dir_Path}/save.JSON";
+        gameSavePath = $"{dir_Path}/globals.JSON";
+
+        //create game directory if it doesn't exist, this is a method for new game to create, so let's not do that here.
+        //We'll fix this later
+        //the save paths, should create themselves
+        if (!Directory.Exists(dir_Path))
+        {
+            Directory.CreateDirectory(dir_Path);
+            File.Create(savePath);
+            File.Create(gameSavePath);
+            /*
+             * generate new keys for playerData here, (will read data overwrite this? check)
+             */
+            PlayerData.Add("Inventory", new List<PlayerItem>() { });
+            playerDirty = true;
+        }
     }
     void Start()
     {
-        //initialize save data, deserialize json, set static object that we can access with newtonsoft
-        //ReadPlayerData();
-        //ReadGameData();
     }
-    //write test to make sure tempData is correct, also test Data on Read, and make sure it's clear after save
-    async Task OnSave(string path) 
+    //Data IO
+    public async Task SavePlayerData()
     {
-        //serialize data, write to output, if Data is not null(ignored by serializer settings)
-        await Task.Run(() => 
+        if (playerDirty)
         {
-            //testable string, if it doesn't run in order make it a task<string> and wait for it to complete with result
-            string jsonString = JsonConvert.SerializeObject(Data, _options);
-            //delete file
-            File.Delete(path);
-            //re-write file
-            File.WriteAllText(path, jsonString);
-        });
+            //save player
+            //serialize data, write to output, if Data is not null(ignored by serializer settings)
+            await Task.Run(() =>
+            {
+                Debug.Log("save ran");
+                //testable string, if it doesn't run in order make it a task<string> and wait for it to complete with result
+                string jsonString = JsonConvert.SerializeObject(PlayerData, _options);
+                //re-write file
+                File.WriteAllText(savePath, jsonString);
+            });
+            playerDirty = false;
+        }
+        else
+        {
+            Debug.Assert(playerDirty, "No player changes to Save!");
+        }
+        //we need to save all data at the same time, so that problems don't happen, like losing the keys and still having global switch unlocked
+        //save game data
+        await SaveGameData();
     }
-    //call method in game
     public async Task SaveGameData()
     {
-        //create a temp save
-        await OnSave(tempPath);
-        //save game
-        await OnSave(savePath);
-        File.Delete(tempPath);
-
+        //serialize data, write to output, if Data is not null(ignored by serializer settings)
+        await Task.Run(() =>
+        {
+            if (gameDirty)
+            {
+                //we need to write one at a time here
+                //testable string, if it doesn't run in order make it a task<string> and wait for it to complete with result
+                string jsonString = JsonConvert.SerializeObject(GameData, _options);
+                //re-write file
+                File.AppendAllText(gameSavePath, jsonString);
+            }
+            else
+            {
+                Debug.Assert(playerDirty, "No game changes to Save!");
+            }
+        });
     }
+    //pre-logic for reading player data
     //obtain saved info deserialize json data
-    public async Task ReadPlayerData()
+    public void ReadPlayerData()
     {
-        await OnLoad();
-        //make sure we readData, new game start-up should create the data file, with all necessary properties
-        //set Data deserialized data, read from path
-        Data = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@savePath));
+        //we should make sure the readfile is not null here
+                PlayerData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@savePath), _options);
+                //Debug.Log(PlayerData["Inventory"]);
     }
-    async Task OnLoad()
+    public void ReadGameData()
     {
-        //attach temp save logic here, runs before load method executes
-        //i.e. if save doesn't exist, loadTempSave
-        await Task.Run(()=>Debug.Log("Check if save exists."));
-        
-    }
-    public async Task ReadGameData() 
-    {
-        //Add selected gamefolder to path
-        await Task.Run(()=>GameData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@savePath)));
-    }
 
-    //method that takes on object property for saving one piece of info at a time, we could also add that to the list and check if the list is dirty
-    //this is only useful if we want to save a piece of info to the game, not update the player save file, like a door unlocked variable, or a boss exists variable
-    //maybe we should have a second save file for game data, that doesn't get deleted and we cumulatively add keys as needed to the file,
-    //this would make it possible to transfer the character out of the game instance, adn start a new game with upgraded stats
-    public void ConvertInfo(Object info)
-    {
-        //serialiaze global switch object
-        //call onSave
+            //we should make sure the readfile is not null here
+            GameData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@gameSavePath), _options);
     }
-    public void GetSwitchInfo(string prop) 
-    {
-        //check the gameSave static array for the key[prop], read it's value
-    }
-    //add game data, we won't remove data since this should be cumulative, I'm passing in  objects bc these might be arrays with multiple values
-    //I.E. keys = [blue key, red key, green key]
-    public void AddData(string keyName, System.Object prop)
-    {
-        //add key, value to game list
-        GameData.Add(keyName, prop);
-    }
-    public System.Object GetData(string keyName) 
-    {
-        return GameData[keyName];
-    }
-    //REM: changes to this static object will reflect in save, bc we delete the save file before callling save
-    //NEEDS, create a temp save file onSaving in case our async save function gets interrupted after del. Then, on loadGame, if a temp file exists, rename it to the save file
+    //DTO management
+    //Player data management
     public void AddProp(string keyName, System.Object? prop)
     {
         //add a new key to player list, set to null or value
-        Data.Add(keyName, prop);
+        PlayerData.Add(keyName, prop);
+        playerDirty = true;
     }
-    public void RemoveProp(string keyName) 
+    public void RemoveProp(string keyName)
     {
-        //remove a property from our save object, **maybe we need to remove from save data to handle memory
-        Data.Remove(keyName);
+        //remove a property from our save object
+        PlayerData.Remove(keyName);
+        playerDirty = true;
     }
-
+    //Get info from player data
+    public System.Object GetPlayerInfo(string keyName)
+    {
+        return PlayerData[keyName];
+    }
+    //Game Data Management
+    //method that takes on object property for saving one piece of info at a time, instead of re-writing file
+    public async Task AddData(string keyName, System.Object prop)
+    {
+        //add key, value to game list
+        GameData.Add(keyName, prop);
+        //this keeps the game data from saving if nothing has changed during the session
+        gameDirty = true;
+    }
+    //Get info from game data
+    public System.Object GetGameInfo(string keyName)
+    {
+        return GameData[keyName];
+    }
 }
-//NEED TO CREATE A STATIC OBJECT THAT REPRESENTS OUR SAVEGAME FILE, WE UPDATE THE KEYS WHEN WE SAVE INFO
 //if the info object is dirty, we call save game/or we save on exiting the scene and from the menu, hitting save
 
 /*	SortedList

@@ -4,30 +4,31 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //REM this is a new scene
+    //Declarations
+    [System.NonSerialized] public string gameName;
+    [System.NonSerialized] public GameObject manager;
+    [System.NonSerialized] public GameObject exitController;
+    [System.NonSerialized] public GameObject inventory;
     void Start()
     {
-        //SelectGame();
-        //instantiate managers, or add them to the scenes, IDC!
-        GameObject manager = new GameObject("GameManager") { tag = "Manager" };
+        SelectGame();
+    }
+    void SelectGame() //the function we will run on interacting with the menu
+    {
+        //set game name prop of the manager class
+        GameManager.gameName = "variableGameName";
+        manager = new("GameManager") { tag = "Manager" };
         manager.AddComponent<GameManager>();
-        //GameManager._gameName = "myGame2";
-        //Debug.Log(GameManager._gameName);
-        manager.GetComponent<GameManager>().AddData("testData", new List<string>() { "one", "two", "three" });
-        GameObject exitManager = new GameObject("ExitManager") { tag = "ExitController" };
-        exitManager.AddComponent<ExitManager>();
+        //initialize save data, deserialize json, set static object that we can access with newtonsoft
+        manager.GetComponent<GameManager>().ReadPlayerData();
+        //we're not using this yet
+        manager.GetComponent<GameManager>().ReadGameData();
+        //create keys for player data, also realize GameData will be null until we create that.
+        exitController = new("ExitManager") { tag = "ExitController" };
+        exitController.AddComponent<ExitManager>();
+        inventory = new("InventoryManager") { tag = "Inventory" };
+        inventory.AddComponent<InventoryManager>();
 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    /*void SelectGame() //the function we will run on interacting with the menu
-    {
-        GameObject manager = new GameObject("GameManager");
-        manager.AddComponent<GameManager>();
-        //GameManager._gameName = "myGame2";
-    }*/
 }
