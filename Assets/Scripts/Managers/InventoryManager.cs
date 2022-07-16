@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -41,27 +42,25 @@ public class InventoryManager : MonoBehaviour
         inventory.Add(item);
         Debug.Assert(inventory.Contains(item), $"{item} couldn't be added to inventory");
         Debug.Log($"{item.Amount} {item.Name} added to your inventory!");
-        //update inventory key in game manager
+        //update inventory key in game manager, AddProp sets playerDirty true
+        manager.Replace("Inventory", inventory);
         //this calls save
         await manager.SavePlayerData();
     }
-    public void GetInv() 
+    public void GetInv()
     {
-        //We may need to go with parsing the jsonarray first**
-        //var inv = JArray.Parse(manager.GetPlayerInfo("Inventory").ToString());
-        inventory = JsonConvert.DeserializeObject<List<PlayerItem>>(manager.GetPlayerInfo("Inventory").ToString(), new PlayerItemConverter());
-        //var inv = JsonConvert.DeserializeObject<List<JObject>>(manager.GetPlayerInfo("Inventory").ToString());
-        //need to say for each object, get object name field, use that as type argument for deserialization
-        /*foreach (var obj in inv) 
+        //to serialize arrays, we have to turn it into a list of JObjects and iterate over it to map our custom type, sinc serialization won't support this
+        var inv = JsonConvert.DeserializeObject<List<JObject>>(manager.GetPlayerInfo("Inventory").ToString());
+        foreach (var obj in inv) 
         {
-            var item = JsonConvert.DeserializeObject<PlayerItem>(obj.ToString());
-            Debug.Log(item);
-        }*/
-        Debug.Log(inventory[0]);
-        //var gold1 = JsonConvert.DeserializeObject<Gold>(inv[0].ToString());
-        //Debug.Log(gold1);
-        //inventory.Add(JsonConvert.DeserializeObject<PlayerItem>();
-        //Debug.Log(inventory[0]);
+            var item = JsonConvert.DeserializeObject<JObject>(obj.ToString());
+            Type subType = Type.GetType((string)item["Name"]);
+            var playerItem = (PlayerItem)Activator.CreateInstance(subType);
+            //map properties to new object
+            playerItem.Amount = (int)item["Amount"];
+            inventory.Add(playerItem);
+        }
+        Debug.Log(inventory);
         Debug.Assert(inventory.GetType() == typeof(List<PlayerItem>), "saved key is of wrong type.");
     }
 }

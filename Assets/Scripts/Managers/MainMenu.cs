@@ -20,10 +20,6 @@ public class MainMenu : MonoBehaviour
         GameManager.gameName = "variableGameName";
         manager = new("GameManager") { tag = "Manager" };
         manager.AddComponent<GameManager>();
-        //initialize save data, deserialize json, set static object that we can access with newtonsoft
-        manager.GetComponent<GameManager>().ReadPlayerData();
-        //we're not using this yet
-        manager.GetComponent<GameManager>().ReadGameData();
         //create keys for player data, also realize GameData will be null until we create that.
         exitController = new("ExitManager") { tag = "ExitController" };
         exitController.AddComponent<ExitManager>();

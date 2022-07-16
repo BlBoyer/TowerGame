@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         //persist GameManager
         DontDestroyOnLoad(gameObject);
         //get data path
-        if (gameName == null) 
+        if (gameName == null)
         {
             gameName = "myGame";
         }
@@ -51,12 +51,15 @@ public class GameManager : MonoBehaviour
             /*
              * generate new keys for playerData here, (will read data overwrite this? check)
              */
-            PlayerData.Add("Inventory", new List<PlayerItem>() { });
+            PlayerData.Add("Inventory", new List<PlayerItem>() { new Gold() { Amount = 0 } });
             playerDirty = true;
+            GameData.Add("init", "none");
         }
     }
     void Start()
     {
+        ReadPlayerData();
+        ReadGameData();
     }
     //Data IO
     public async Task SavePlayerData()
@@ -107,14 +110,14 @@ public class GameManager : MonoBehaviour
     public void ReadPlayerData()
     {
         //we should make sure the readfile is not null here
-                PlayerData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@savePath), _options);
-                //Debug.Log(PlayerData["Inventory"]);
+        PlayerData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@savePath), _options);
+        //Debug.Log(PlayerData["Inventory"]);
     }
     public void ReadGameData()
     {
 
-            //we should make sure the readfile is not null here
-            GameData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@gameSavePath), _options);
+        //we should make sure the readfile is not null here
+        GameData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@gameSavePath), _options);
     }
     //DTO management
     //Player data management
@@ -122,6 +125,11 @@ public class GameManager : MonoBehaviour
     {
         //add a new key to player list, set to null or value
         PlayerData.Add(keyName, prop);
+        playerDirty = true;
+    }
+    public void Replace(string keyName, System.Object prop)
+    {
+        PlayerData[keyName] = prop;
         playerDirty = true;
     }
     public void RemoveProp(string keyName)
@@ -137,7 +145,7 @@ public class GameManager : MonoBehaviour
     }
     //Game Data Management
     //method that takes on object property for saving one piece of info at a time, instead of re-writing file
-    public async Task AddData(string keyName, System.Object prop)
+    public void AddData(string keyName, System.Object prop)
     {
         //add key, value to game list
         GameData.Add(keyName, prop);
