@@ -23,8 +23,6 @@ public class PlayerMovement : MonoBehaviour
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _spriteLib = GetComponentInChildren<SpriteLib>().spriteArray;
         _thisSprite = _spriteLib[1];
-       //_playerHealth = GetComponent<Fighter>().health;
-
     }
 
     // Update is called once per frame
@@ -33,16 +31,13 @@ public class PlayerMovement : MonoBehaviour
         ProcessInputs();
         if (hInput != 0 || vInput != 0)
         {
+            
             anim.enabled = true;
-            anim.SetBool("isMoving", true);
             Move();
             Emote();
         }
         else if (hInput == 0 && vInput == 0)
         {
-            anim.SetBool("isMoving", false);
-            //anim.Play("player_idle");
-            anim.StopPlayback();
             anim.enabled = false;
             //set Sprite here
             _spriteRenderer.sprite = _thisSprite;

@@ -27,7 +27,7 @@ public class InventoryManager : MonoBehaviour
     {
         //get data from GameManager - PlayerItems key, KeyList, miscItemLisT
         manager = GameObject.FindWithTag("Manager").GetComponent<GameManager>();
-        //gameManager array needs to have keys created
+        //gameManager array needs to have keys created, the question is, can we do without this??
         Task.Run(() => 
         {
             int status = 3;
@@ -59,7 +59,7 @@ public class InventoryManager : MonoBehaviour
         //update inventory key in game manager, AddProp sets playerDirty true
         manager.Replace("Inventory", (System.Object)inventory);
         Debug.Log("replaced Inventory key with new list");
-        //this calls save
+        //this calls save, which we won't do until save is called in our menu or wherever we add save funcitonality
         manager.SavePlayerData();
     }
     public async void GetInv()

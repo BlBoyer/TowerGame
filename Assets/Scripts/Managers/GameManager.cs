@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
         ReadGameData();
     }
     //Data IO
+    //**if we want to wait for a message saying the game is saved, we will need to do something similar to the read, make sure dirties are false;
     public async void SavePlayerData()
     {
         if (playerDirty)
@@ -117,8 +118,7 @@ public class GameManager : MonoBehaviour
         await ReadPlayerData();
         await ReadGameData();
     }
-    //pre-logic for reading player data
-    //obtain saved info deserialize json data
+    //obtain saved info deserialize json data, THIS MUST BE MARKED ASYNC**, we could prob make this public and get Task.isCompleted bool instead
     private static async Task ReadPlayerData()
     {
             Debug.Log("player data read");
