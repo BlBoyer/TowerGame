@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -27,7 +28,20 @@ public class InventoryManager : MonoBehaviour
         //get data from GameManager - PlayerItems key, KeyList, miscItemLisT
         manager = GameObject.FindWithTag("Manager").GetComponent<GameManager>();
         //gameManager array needs to have keys created
-        GetInv();
+        Task.Run(() => 
+        {
+            int status = 3;
+            while (manager.getStatus() < status) 
+            {
+                Debug.Log("inv task ran");
+                if (manager.getStatus() == 2) 
+                {
+                    Debug.Log("getting inv");
+                    GetInv();
+                    status = 2;
+                }
+            }
+        });
     }
     //we need to display the list when opening inventory and call onInteract when selecting the entry which could be buttons or clickable fields
     /*void onInteract()
@@ -37,30 +51,40 @@ public class InventoryManager : MonoBehaviour
     //called from interactable UI method of game, needs passed an Object(invisible)
     //if we render the object in inventory we prob could add a sprite to the record
     //need to not save this until later, but bc we're testing
-    public async void AddToInv(PlayerItem item)
+    public void AddToInv(PlayerItem item)
     {
         inventory.Add(item);
         Debug.Assert(inventory.Contains(item), $"{item} couldn't be added to inventory");
         Debug.Log($"{item.Amount} {item.Name} added to your inventory!");
         //update inventory key in game manager, AddProp sets playerDirty true
-        manager.Replace("Inventory", inventory);
+        manager.Replace("Inventory", (System.Object)inventory);
+        Debug.Log("replaced Inventory key with new list");
         //this calls save
-        await manager.SavePlayerData();
+        manager.SavePlayerData();
     }
-    public void GetInv()
+    public async void GetInv()
     {
-        //to serialize arrays, we have to turn it into a list of JObjects and iterate over it to map our custom type, sinc serialization won't support this
-        var inv = JsonConvert.DeserializeObject<List<JObject>>(manager.GetPlayerInfo("Inventory").ToString());
-        foreach (var obj in inv) 
+        //to serialize arrays, we have to turn it into a list of JObjects and iterate over it to map our custom type
+        Debug.Log("getting inv from manager called");
+        //1st get player logs, get the type of returned data
+        Debug.Log("keyValue from manager obtained" + manager.GetPlayerInfo("Inventory").GetType());
+        List<JObject> invList;
+        await Task.Run(() =>
         {
-            var item = JsonConvert.DeserializeObject<JObject>(obj.ToString());
-            Type subType = Type.GetType((string)item["Name"]);
-            var playerItem = (PlayerItem)Activator.CreateInstance(subType);
-            //map properties to new object
-            playerItem.Amount = (int)item["Amount"];
-            inventory.Add(playerItem);
-        }
-        Debug.Log(inventory);
-        Debug.Assert(inventory.GetType() == typeof(List<PlayerItem>), "saved key is of wrong type.");
+            //second getPlayer logs, but doesn't get that value
+            invList = JsonConvert.DeserializeObject<List<JObject>>(manager.GetPlayerInfo("Inventory").ToString());
+            Debug.Log("inv variable stored");
+            foreach (var obj in invList)
+            {
+                var item = JsonConvert.DeserializeObject<JObject>(obj.ToString());
+                Type subType = Type.GetType((string)item["Name"]);
+                var playerItem = (PlayerItem)Activator.CreateInstance(subType);
+                //map properties to new object
+                playerItem.Amount = (int)item["Amount"];
+                inventory.Add(playerItem);
+            }
+        });
+        Debug.Log("inventory list: ");
+        inventory.ForEach(item => Debug.Log(item));
     }
 }
