@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class GamePersistence : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Test gameData in new scene
     void Start()
     {
-        //Debug.Log(GameManager._gameName);
-        //looks like we're not getting a referencce to the game manager
-        //GameManager.instance.AddData("testData", new List<string>(){ "one", "two", "three" });
-        var data = GameObject.FindWithTag("Manager").GetComponent<GameManager>().GetGameInfo("testData");
-        var expectedList = (List<string>)data;
-        Debug.Log(expectedList[0]);
+        var data = GameObject.FindWithTag("Manager").GetComponent<GameManager>().GetGameInfo("init");
+        /*var expectedList = (List<string>)data;
+        Debug.Log(expectedList[0]);*/
+        Debug.Log(data);
         
     }
 

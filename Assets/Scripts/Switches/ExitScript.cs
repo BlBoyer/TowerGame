@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,9 +10,6 @@ public class ExitScript : MonoBehaviour
 
     //get Master key for this dungeon
     public GameObject masterKey;
-    //add the Exit Manager through UI
-    //public GameObject ExitManager;
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         List<GameObject> comparedKeys = keyParts.Intersect(masterKey.GetComponent<KeyBuilder>().keys).ToList();
@@ -23,12 +19,12 @@ public class ExitScript : MonoBehaviour
         {
             Debug.Log("we've collided with the exit door and our keys match up");
 
-            //logic for saving keys
+            //logic for saving keys in gameData
 
             //we could use the UI for this object for less referencing
             var manager = GameObject.FindWithTag("ExitController").GetComponent<ExitManager>();
-            manager.setScene("level2");
-            manager.changeScene("VerticalSlice");
+            manager.SetScene("level2");
+            manager.ChangeScene("VerticalSlice");
         }
     }
 }

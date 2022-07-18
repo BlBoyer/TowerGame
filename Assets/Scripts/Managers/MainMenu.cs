@@ -1,30 +1,93 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+#nullable enable
 
 public class MainMenu : MonoBehaviour
 {
     //REM this is a new scene
     //Declarations
-    [System.NonSerialized] public string gameName;
+    public Button continueBtn;
+    public Button newGameBtn;
+    public Button createButton;
+    public TMP_Dropdown gameList;
+    public TMP_InputField nameSetter;
+    private string nameInput;
+    private string copy_dir;
+    private string? dir_path;
+    private string? savePath;
+    private string? gameSavePath;
+    private string entryScene;
     [System.NonSerialized] public GameObject manager;
     [System.NonSerialized] public GameObject exitController;
     [System.NonSerialized] public GameObject inventory;
-    void Start()
+    private void Awake()
     {
-        SelectGame();
+        copy_dir = $"{Application.dataPath}/StartupFiles";
     }
-    void SelectGame() //the function we will run on interacting with the menu
+    private void Start()
     {
-        //set game name prop of the manager class
-        GameManager.gameName = "variableGame3";
+        //show active games
+        //we'll need to rep the list here and have a click handler for each field
+        continueBtn.onClick.AddListener(() => gameList.gameObject.SetActive(true));
+        //show input field
+        newGameBtn.onClick.AddListener(() => {
+            nameSetter.gameObject.SetActive(true);
+            createButton.onClick.AddListener(() => CreateGame());
+        });
+        nameSetter.onValueChanged.AddListener((value) => 
+        {
+            nameInput = value;
+            Debug.Log(value);
+        });
+    }
+    private void SetPaths(string dir) 
+    {
+        dir_path = $"{Application.dataPath}/{dir}";
+        savePath = $"{dir_path}/save.JSON";
+        gameSavePath = $"{dir_path}/globals.JSON";
+    }
+    void LoadGame()
+    {
+        //set data paths
+        GameManager.savePath = savePath;
+        GameManager.gameSavePath = gameSavePath;
+        //create managers
         manager = new("GameManager") { tag = "Manager" };
         manager.AddComponent<GameManager>();
-        //create keys for player data, also realize GameData will be null until we create that.
+        //wait for data to come up, then load scene, then load inventory
         exitController = new("ExitManager") { tag = "ExitController" };
         exitController.AddComponent<ExitManager>();
         inventory = new("InventoryManager") { tag = "Inventory" };
         inventory.AddComponent<InventoryManager>();
+    }
+    void CreateGame()
+    {
+        //set gameName to input
+        SetPaths(nameInput);
+        if (!Directory.Exists(dir_path))
+        {
+            Directory.CreateDirectory(dir_path);
+            //we should copy an existing JSON to playerData
+            File.Copy($"{copy_dir}/save.JSON", savePath);
+            Debug.Assert(File.Exists(savePath));
+            File.Copy($"{copy_dir}/globals.JSON", gameSavePath);
+            Debug.Assert(File.Exists(gameSavePath));
+            //copy files instead of creating empties or we'll need a whole section of create logic in game manager
+        }
+        else 
+        {
+            Debug.Log("This game already exists!");
+        }
+        LoadGame();
+    }
+    void SelectGame()
+    {
+        //set game name
+        //get data path
 
     }
 }

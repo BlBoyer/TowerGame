@@ -17,10 +17,8 @@ public class GameManager : MonoBehaviour
 
     //Declarations
     /**need to change paths based on selected game instance**/
-    public static string? gameName { get; set; }
-    private static string dir_Path;
-    private static string savePath;
-    private static string gameSavePath;
+    public static string savePath { get; set; }
+    public static string gameSavePath { get; set; }
     private static SortedList PlayerData = new();
     private static SortedList GameData = new(); //only access by key, order doesn't matter
     public static int readStatus = 0;
@@ -33,41 +31,13 @@ public class GameManager : MonoBehaviour
     {
         //persist GameManager
         DontDestroyOnLoad(gameObject);
-        //get data path
-        if (gameName == null)
-        {
-            gameName = "myGame";
-        }
-        dir_Path = $"{Application.dataPath}/{gameName}";
-        savePath = $"{dir_Path}/save.JSON";
-        gameSavePath = $"{dir_Path}/globals.JSON";
-
-        //create game directory if it doesn't exist, this is a method for new game to create, so let's not do that here.
-        //We'll fix this later
-        //the save paths, should create themselves
-        if (!Directory.Exists(dir_Path))
-        {
-            Directory.CreateDirectory(dir_Path);
-            File.Create(savePath);
-            Debug.Assert(File.Exists(savePath));
-            File.Create(gameSavePath);
-            Debug.Assert(File.Exists(gameSavePath));
-            /*
-             * generate new keys for playerData here, (will read data overwrite this? check)
-             */
-            PlayerData.Add("Inventory", new List<PlayerItem>());
-            Debug.Assert(PlayerData.ContainsKey("Inventory"));
-            playerDirty = true;
-            GameData.Add("init", "none");
-            Debug.Assert(GameData.ContainsKey("init"));
-            gameDirty = true;
-        }
     }
     void Start()
     {
         //we need to make this a task with a bool and get the bool to GetValues from other scripts
+        //if we read both, the value gets set to 2 and than save data runs, which allows the data to be saved for next run, this only works with save data in the files.
         ReadPlayerData();
-        ReadGameData();
+        //ReadGameData();
     }
     //Data IO
     //**if we want to wait for a message saying the game is saved, we will need to do something similar to the read, make sure dirties are false;
@@ -93,9 +63,10 @@ public class GameManager : MonoBehaviour
         }
         //we need to save all data at the same time, so that problems don't happen, like losing the keys and still having global switch unlocked
         //save game data
-        SaveGameData();
+        await SaveGameData();
     }
-    private async static void SaveGameData()
+    /**private keeps us from calling the savegame without saving the player data, in case switches are dependent on playerdata**/
+    private async Task SaveGameData()
     {
         //serialize data, write to output, if Data is not null(ignored by serializer settings)
         if (gameDirty)
@@ -105,7 +76,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Game Save Ran.");
                 string jsonString = JsonConvert.SerializeObject(GameData, _options);
                 //re-write file
-                File.AppendAllText(gameSavePath, jsonString);
+                File.WriteAllText(gameSavePath, jsonString);
             });
         } 
         else
@@ -113,25 +84,21 @@ public class GameManager : MonoBehaviour
             Debug.Assert(playerDirty, "No game changes to Save!");
         }
     }
-    private async void ReadAllData() 
-    {
-        await ReadPlayerData();
-        await ReadGameData();
-    }
     //obtain saved info deserialize json data, THIS MUST BE MARKED ASYNC**, we could prob make this public and get Task.isCompleted bool instead
     private static async Task ReadPlayerData()
     {
-            Debug.Log("player data read");
+            Debug.Log("player data reading from: " + savePath);
             PlayerData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@savePath), _options);
             Debug.Assert(PlayerData.Contains("Inventory") == true, "PlayerData doesn't contain inventory");
             //we're reading this key at the very end of everything still!
-            Debug.Log(PlayerData["Inventory"]);
+            Debug.Log("Inventory value from Game Manager Read method :"+PlayerData["Inventory"]);
             readStatus = 1;
+            ReadGameData();
     }
     private static async Task ReadGameData()
     {
         //we should make sure the readfile is not null here
-            Debug.Log("game date read");
+            Debug.Log("game date reading from: " + gameSavePath);
             GameData = JsonConvert.DeserializeObject<SortedList>(File.ReadAllText(@gameSavePath), _options);
             readStatus = 2;
     }
@@ -170,9 +137,17 @@ public class GameManager : MonoBehaviour
         //this keeps the game data from saving if nothing has changed during the session
         gameDirty = true;
     }
+    public void ReplaceData(string keyName, System.Object prop)
+    {
+        //add key, value to game list
+        GameData[keyName] = prop;
+        //this keeps the game data from saving if nothing has changed during the session
+        gameDirty = true;
+    }
     //Get info from game data
     public System.Object GetGameInfo(string keyName)
     {
+        Debug.Log("getting game info received key: " + keyName);
         return GameData[keyName];
     }
     public int getStatus() 
