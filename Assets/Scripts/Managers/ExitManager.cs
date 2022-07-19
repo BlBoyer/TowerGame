@@ -41,12 +41,20 @@ public class ExitManager : MonoBehaviour
                     var startScene = (string)gameManager.GetGameInfo("scene");
                     //I might put this outside the loop
                     SetScene(startScene);
-                    ChangeScene("MainMenu");
+                    //ChangeScene("MainMenu");
                     isCompleted = true;
                     //break;
                 }
             }
         });
+    }
+    void Update() 
+    {
+        if (SceneManager.GetActiveScene().name == "MainMenu" && currentScene == "VerticalSlice")
+        {
+            Debug.Log("Changing scene in update");
+            ChangeScene("MainMenu");
+        }
     }
     public void SetScene(string name) 
     {
@@ -63,11 +71,11 @@ public class ExitManager : MonoBehaviour
     {
 
         Debug.Log(currentScene);
-        SceneManager.LoadScene(currentScene, LoadSceneMode.Single);
+        SceneManager.LoadSceneAsync(currentScene, LoadSceneMode.Single);
         //Debug.Log(SceneManager.GetActiveScene());
-        /*if (exitingScene != null) //&& SceneManager.GetActiveScene().name == currentScene) 
-        {
-            SceneManager.UnloadSceneAsync(exitingScene);
-        }*/
+        //if (exitingScene != null)// && SceneManager.GetActiveScene().name == currentScene) 
+        //{
+        //    SceneManager.UnloadSceneAsync(exitingScene);
+        //}
     }
 }

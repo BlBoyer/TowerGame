@@ -32,9 +32,14 @@ public class MainMenu : MonoBehaviour
     {
         //show active games
         //we'll need to rep the list here and have a click handler for each field
-        continueBtn.onClick.AddListener(() => gameList.gameObject.SetActive(true));
+        continueBtn.onClick.AddListener(() => 
+        {
+            nameSetter.gameObject.SetActive(false);
+            gameList.gameObject.SetActive(true); 
+        });
         //show input field
         newGameBtn.onClick.AddListener(() => {
+            gameList.gameObject.SetActive(false);
             nameSetter.gameObject.SetActive(true);
             createButton.onClick.AddListener(() => CreateGame());
         });
