@@ -20,7 +20,6 @@ public class MainMenu : MonoBehaviour
     private string? dir_path;
     private string? savePath;
     private string? gameSavePath;
-    private string entryScene;
     [System.NonSerialized] public GameObject manager;
     [System.NonSerialized] public GameObject exitController;
     [System.NonSerialized] public GameObject inventory;
@@ -31,8 +30,7 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         //show active games
-        //we'll need to rep the list here and have a click handler for each field
-        continueBtn.onClick.AddListener(() => 
+       continueBtn.onClick.AddListener(() => 
         {
             nameSetter.gameObject.SetActive(false);
             gameList.gameObject.SetActive(true); 
