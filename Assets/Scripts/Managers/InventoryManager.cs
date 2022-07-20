@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -56,8 +57,16 @@ public class InventoryManager : MonoBehaviour
     }*/
     public void AddToInv(PlayerItem item)
     {
-        inventory.Add(item);
-        Debug.Assert(inventory.Contains(item), $"{item} couldn't be added to inventory");
+        if (item is Gold)
+        {
+            var updateItem = inventory.Single(entry => entry is Gold);
+            updateItem.Amount += item.Amount;
+            Debug.Log(updateItem);
+        }
+        else if (item.Amount > 0 || item.Amount < 1 && !(inventory.Contains(item)))
+        {
+            inventory.Add(item);
+        }
         Debug.Log($"{item.Amount} {item.Name} added to your inventory!");
         //update inventory key in game manager, AddProp sets playerDirty true
         manager.Replace("Inventory", (System.Object)inventory);
