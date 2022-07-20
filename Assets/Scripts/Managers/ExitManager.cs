@@ -73,12 +73,8 @@ public class ExitManager : MonoBehaviour
     public void ChangeScene(string exitingScene) 
     {
 
-        Debug.Log(currentScene);
-        SceneManager.LoadSceneAsync(currentScene, LoadSceneMode.Single);
-        //Debug.Log(SceneManager.GetActiveScene());
-        //if (exitingScene != null)// && SceneManager.GetActiveScene().name == currentScene) 
-        //{
-        //    SceneManager.UnloadSceneAsync(exitingScene);
-        //}
+        Debug.Log($"changing scene to: {currentScene}");
+        //I changed from Async, to stop multiple scene changes on update
+        SceneManager.LoadScene(currentScene, LoadSceneMode.Single);
     }
 }
