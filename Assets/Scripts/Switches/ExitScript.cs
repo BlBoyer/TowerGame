@@ -23,20 +23,19 @@ public class ExitScript : MonoBehaviour
         List<GameObject> comparedKeys = keyParts.Intersect(masterKey.GetComponent<KeyBuilder>().keys).ToList();
         Debug.Assert(comparedKeys.SequenceEqual(keyParts), $"List didn't match, returned type: {comparedKeys.GetType()}");
         //if gameobjects are in list and game data doesn't have door key
-        if (collision.gameObject.CompareTag("Player") && comparedKeys.SequenceEqual(keyParts))
+        if (collision.gameObject.CompareTag("Player") && comparedKeys.SequenceEqual(keyParts) && !masterKey.GetComponent<KeyBuilder>().isBuilt)
         {
             Debug.Log("we've collided with the exit door and our keys match up");
             //run animations
-            //save Door Key in Game Data
             manager.SetScene("level2");
             manager.ChangeScene("VerticalSlice");
-
-
+            //we don't run through this again
+            masterKey.GetComponent<KeyBuilder>().isBuilt = true;
         }
-/*        else// go through door
+        else if (masterKey.GetComponent<KeyBuilder>().isBuilt)
         {
             manager.SetScene("level2");
             manager.ChangeScene("VerticalSlice");
-        }*/
+        }
     }
 }

@@ -24,13 +24,14 @@ public class KeyBuilder : MonoBehaviour
     //the list that we build from setting the keys inactive
     public List<GameObject> keys;
     private List<KeyValuePair<float[], bool>> keyData;
+    public bool isBuilt = false;
     private void Start()
     {
         manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         //Get key from game data, if it exists
         keyData = (List<KeyValuePair<float[], bool>>)manager.GetGameInfo(keyType);
         //if the key doesn't exist in data create it and instantiate prefab keys
-        Debug.Log(keyData == null); //works
+        Debug.Log((keyData == null) + "Key builder is null, building key.");
         if (keyData == null) 
         {
             var thisKeyT = Type.GetType(keyType);
@@ -96,6 +97,11 @@ public class KeyBuilder : MonoBehaviour
                     this.addKey(thisKeyPrefab);
                 }
             }
+            //hopefully this runs after all the addKey methods are completed, rem, this is only at start it key exists
+            if (keyData.All(pairs => !pairs.Value))
+            {
+                isBuilt = true;
+            }
         }
     }
 
@@ -103,7 +109,6 @@ public class KeyBuilder : MonoBehaviour
     {
         //this adds the gameobject to the list
         keys.Add(keyPart);
-        //we need to use the ActiveStatus of this key and set the boolean of our save data, may from the item script
         float[] vectors = new float[3] 
         { 
             keyPart.transform.position.x,
