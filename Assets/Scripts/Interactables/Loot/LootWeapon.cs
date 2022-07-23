@@ -13,6 +13,7 @@ public class LootWeapon : LootItem
         int randInd = UnityEngine.Random.Range(0, weapons.Count);
         Type subType = Type.GetType((string)weapons[randInd]);
         var playerItem = (PlayerItem)Activator.CreateInstance(subType);
+        playerItem.Amount = 1;
         Debug.Assert(playerItem is Weapon, "This is not a weapon item!");
         return playerItem;
     }

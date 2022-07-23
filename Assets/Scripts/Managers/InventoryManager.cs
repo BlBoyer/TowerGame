@@ -14,7 +14,6 @@ public class InventoryManager : MonoBehaviour
     //responsive UI would mean dynamically changing the sections visible
     //we create the ind. UIs by checking length of our Lists to render
     public List<PlayerItem> inventory = new();
-    public List<GameObject> doorKeys = new();
     private GameManager manager;
     [System.NonSerialized] public bool completed = false;
 
@@ -50,30 +49,7 @@ public class InventoryManager : MonoBehaviour
             }
         });
     }
-    //we need to display the list when opening inventory and call onInteract when selecting the entry which could be buttons or clickable fields
-    /*void onInteract()
-    {
-        //call item method from item class/record, if it has one(maybe we change from records to classes, or use the string effect of the record)
-    }*/
-    public void AddToInv(PlayerItem item)
-    {
-        if (item is Gold)
-        {
-            var updateItem = inventory.Single(entry => entry is Gold);
-            updateItem.Amount += item.Amount;
-            Debug.Log(updateItem);
-        }
-        else if (item.Amount > 0 || item.Amount < 1 && !(inventory.Contains(item)))
-        {
-            inventory.Add(item);
-        }
-        Debug.Log($"{item.Amount} {item.Name} added to your inventory!");
-        //update inventory key in game manager, AddProp sets playerDirty true
-        manager.Replace("Inventory", (System.Object)inventory);
-        Debug.Log("replaced Inventory key with new list");
-        //this calls save, which we won't do until save is called in our menu or wherever we add save funcitonality
-        manager.SavePlayerData();
-    }
+    //Get saved data
     public async Task GetInv()
     {
         //to serialize arrays, we have to turn it into a list of JObjects and iterate over it to map our custom type
@@ -81,19 +57,39 @@ public class InventoryManager : MonoBehaviour
         //1st get player logs, get the type of returned data
         Debug.Log("keyValue from manager obtained" + manager.GetPlayerInfo("Inventory").GetType());
         List<JObject> invList;
-            //second getPlayer logs, but doesn't get that value
-            invList = JsonConvert.DeserializeObject<List<JObject>>(manager.GetPlayerInfo("Inventory").ToString());
-            Debug.Log("inv variable stored");
-            foreach (var obj in invList)
-            {
-                var item = JsonConvert.DeserializeObject<JObject>(obj.ToString());
-                Type subType = Type.GetType((string)item["Name"]);
-                var playerItem = (PlayerItem)Activator.CreateInstance(subType);
-                //map properties to new object
-                playerItem.Amount = (int)item["Amount"];
-                inventory.Add(playerItem);
-            }
+        //second getPlayer logs, but doesn't get that value
+        invList = JsonConvert.DeserializeObject<List<JObject>>(manager.GetPlayerInfo("Inventory").ToString());
+        Debug.Log("inv variable stored");
+        foreach (var obj in invList)
+        {
+            var item = JsonConvert.DeserializeObject<JObject>(obj.ToString());
+            Type subType = Type.GetType((string)item["Name"]);
+            var playerItem = (PlayerItem)Activator.CreateInstance(subType);
+            //map properties to new object
+            playerItem.Amount = (int)item["Amount"];
+            inventory.Add(playerItem);
+        }
         Debug.Log("inventory list follows: ");
         inventory.ForEach(item => Debug.Log(item));
+    }
+    public void AddToInv(PlayerItem item)
+    {
+        /*We're going to say, if an item isn't allowed more than one, the amount is set to zero*/
+        /*we remove only the items that are set to zero on using them, so we need an interface for inventory item onInteract*/
+        //Stackable items (one instance)
+        if (item is Gold)
+        {
+            var updateItem = inventory.Single(entry => entry is Gold);
+            updateItem.Amount += item.Amount;
+            Debug.Log(updateItem);
+        }
+        else if (item.Amount > 0 || item.Amount < 1 && !(inventory.Contains(item)))
+        {//Non-Stackable items, and single items
+            inventory.Add(item);
+        }
+        Debug.Log($"{item.Amount} {item.Name} added to your inventory!");
+        //update inventory key in game manager, AddProp sets playerDirty true
+        manager.Replace("Inventory", (System.Object)inventory);
+        Debug.Log("replaced Inventory key with new list");
     }
 }
