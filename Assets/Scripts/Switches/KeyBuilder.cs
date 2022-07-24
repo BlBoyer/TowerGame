@@ -25,13 +25,18 @@ public class KeyBuilder : MonoBehaviour
     public List<GameObject> keys;
     private List<KeyValuePair<float[], bool>> keyData;
     public bool isBuilt = false;
+    private static readonly JsonSerializerSettings _options = new() { NullValueHandling = NullValueHandling.Ignore };
     private void Start()
     {
         manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         //Get key from game data, if it exists
-        keyData = (List<KeyValuePair<float[], bool>>)manager.GetGameInfo(keyType);
+        var rawData = manager.GetGameInfo(keyType);
+        if (rawData != null)
+        {
+            keyData = JsonConvert.DeserializeObject<List<KeyValuePair<float[], bool>>>(rawData.ToString(), _options);
+        }
         //if the key doesn't exist in data create it and instantiate prefab keys
-        Debug.Log((keyData == null) + "Key builder is null, building key.");
+        Debug.Log("KeyData is " + (keyData));
         if (keyData == null) 
         {
             var thisKeyT = Type.GetType(keyType);
@@ -49,7 +54,6 @@ public class KeyBuilder : MonoBehaviour
                 exitDoor.GetComponent<ExitScript>().keyParts.Add(thisKeyPrefab);
                 //set the prefabs active status to the boolean
                 keyPrefab.SetActive(prefab.Value);
-                Debug.Log($"new key Item placed at {prefab.Key}");
                 //if value is false add to gameobject list
                 if (!prefab.Value)
                 {
@@ -75,29 +79,31 @@ public class KeyBuilder : MonoBehaviour
         }
         else
         {
-            //deserailize saved data and create prefabs from that (for active values)
-            var keyParts = JsonConvert.DeserializeObject<List<KeyValuePair<float[], bool>>>(keyData.ToString());
+            //deserialize saved data and create prefabs from that (for active values)
+            //var keyParts = JsonConvert.DeserializeObject<List<KeyValuePair<float[], bool>>>(keyData.ToString());
             //foreach prefab in key, instantiate
-            foreach (var prefab in keyParts)
+            foreach (var prefab in keyData)
             {
                 //make Vector3 here for cleanliness
                 var vector = new Vector3(prefab.Key[0], prefab.Key[1], prefab.Key[2]);
                 //set the masterkey field for this key part
                 GameObject thisKeyPrefab = Instantiate(keyPrefab, vector, Quaternion.identity);
                 thisKeyPrefab.GetComponent<KeyItem>().masterKey = gameObject;
-                thisKeyPrefab.name = $"{keyType}{keyParts.IndexOf(prefab)}";
+                thisKeyPrefab.name = $"{keyType}{keyData.IndexOf(prefab)}";
                 //add prefab to door key list
                 exitDoor.GetComponent<ExitScript>().keyParts.Add(thisKeyPrefab);
                 //set the prefabs active status to the boolean
-                keyPrefab.SetActive(prefab.Value);
-                Debug.Log($"new key Item placed at {prefab.Key}");
+                thisKeyPrefab.SetActive(prefab.Value);
                 //if value is false add to gameobject list
+                Debug.Assert(!prefab.Value, "prefabs value is coming true so it is being instantiated.");
                 if (!prefab.Value) 
                 {
-                    this.addKey(thisKeyPrefab);
+                    //we can't call addKey here bc it changes te keyData values, we just need to add it to the list bc it's here already in keyData
+                    //this.addKey(thisKeyPrefab);
+                    keys.Add(thisKeyPrefab);
                 }
             }
-            //hopefully this runs after all the addKey methods are completed, rem, this is only at start it key exists
+            //hopefully this runs after all the addKey methods are completed, rem, this is only at start if key exists
             if (keyData.All(pairs => !pairs.Value))
             {
                 isBuilt = true;
@@ -107,6 +113,7 @@ public class KeyBuilder : MonoBehaviour
 
     public void addKey(GameObject keyPart) 
     {
+        Debug.Log($"Adding keypart {keyPart.name} to list.");
         //this adds the gameobject to the list
         keys.Add(keyPart);
         float[] vectors = new float[3] 
@@ -118,7 +125,7 @@ public class KeyBuilder : MonoBehaviour
         var newPair = new KeyValuePair<float[], bool>(vectors, false);
         //need to get the currect list and replace one of the booleans at this keyPart transform position
         int i = keyData.IndexOf(keyData.Single(part => part.Key.SequenceEqual(vectors)));
-        //key data that is saveable changed
+        /*key data that is saveable changed to false value*/
         keyData[i] = newPair;
         manager.ReplaceData(keyType, keyData);
     }
