@@ -16,7 +16,7 @@ public class InventoryManager : MonoBehaviour
     public List<PlayerItem> inventory = new();
     private GameManager manager;
     [System.NonSerialized] public bool completed = false;
-
+    public bool dirty;
     //Methods
     private void Awake()
     {
@@ -91,5 +91,6 @@ public class InventoryManager : MonoBehaviour
         //update inventory key in game manager, AddProp sets playerDirty true
         manager.Replace("Inventory", (System.Object)inventory);
         Debug.Log("replaced Inventory key with new list");
+        dirty = true;
     }
 }

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public abstract class LootItem : InteractableObject
 {
-    //REMAKE TO ABSTRACT THE NULL REFERENCE ERROR IS ON THE INTERACTION MANAGER NOT THE GOLD OBJECT
-
-    //protected PlayerItem itemToAdd { get; set; }
     //override method
     protected override void onInteract()
     {

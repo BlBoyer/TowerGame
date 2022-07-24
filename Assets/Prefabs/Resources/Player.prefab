@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1942262853
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 732202142, guid: 8541af4f016054944b8acf5f99ef8abc, type: 3}
   m_Color: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 5231301891188017748}
   - component: {fileID: 5231301891188017751}
   - component: {fileID: 5231301891188017738}
+  - component: {fileID: 6874765547755639836}
   - component: {fileID: 5231301891188017736}
   - component: {fileID: 5231301891188017737}
   m_Layer: 6
@@ -196,6 +197,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &6874765547755639836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5231301891188017747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1669ef722fdfa740a5b65610726031c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameMenuPref: {fileID: 6171996653396962960, guid: 8dd1cca7ce2ca2e4bb227ac9c8381b5d, type: 3}
+  invMenuPref: {fileID: 4331357371724714759, guid: ade0a8f8680a117439b89e8e5a3115ef, type: 3}
+  playerStatPref: {fileID: 0}
 --- !u!114 &5231301891188017736
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,22 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEditor;
 #nullable enable
 public class ExitManager : MonoBehaviour
 {
-    //list game scenes here
-    /*[System.NonSerialized] public static List<string> scenes = new List<string>()
-    {
-        "MainMenu",
-        "VerticalSlice",
-        "level2"
-    };*/
     bool isCompleted = false;
     private static string currentScene;
-    public GameObject playerPrefab;
     private GameManager gameManager;
     private InventoryManager invManager;
     List<string> scenes = new();
@@ -41,7 +34,7 @@ public class ExitManager : MonoBehaviour
                 {
                     //get scene data
                     Debug.Log("getting scene");
-                    var startScene = (string)gameManager.GetGameInfo("scene");
+                    var startScene = (string)gameManager.GetGameInfo("Scene");
                     //I might put this outside the loop
                     SetScene(startScene);
                     //ChangeScene("MainMenu");
@@ -76,5 +69,13 @@ public class ExitManager : MonoBehaviour
         Debug.Log($"changing scene to: {currentScene}");
         //I changed from Async, to stop multiple scene changes on update
         SceneManager.LoadScene(currentScene, LoadSceneMode.Single);
+        //I don't know if the player shows on the prev scene, but maybe that doesn't matter
+        //we can just set it's own position on awake tbh, rem, we still need to have player status somewhere persistent
+        var posFloats = JsonConvert.DeserializeObject<float[]>(gameManager.GetGameInfo("Position").ToString());
+        //need to auto-deserialize these field when getting the info, this is ridiculous
+        var pos = new Vector3(posFloats[0], posFloats[1], posFloats[2]);
+        GameObject player = Instantiate((GameObject)Resources.Load("Player"), pos, Quaternion.identity);
+        player.name = "Player";
+        Debug.Log("Does player exist?");
     }
 }

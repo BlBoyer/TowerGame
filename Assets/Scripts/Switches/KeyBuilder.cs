@@ -79,9 +79,7 @@ public class KeyBuilder : MonoBehaviour
         }
         else
         {
-            //deserialize saved data and create prefabs from that (for active values)
-            //var keyParts = JsonConvert.DeserializeObject<List<KeyValuePair<float[], bool>>>(keyData.ToString());
-            //foreach prefab in key, instantiate
+            //foreach prefab info in keyData, instantiate
             foreach (var prefab in keyData)
             {
                 //make Vector3 here for cleanliness
@@ -95,17 +93,17 @@ public class KeyBuilder : MonoBehaviour
                 //set the prefabs active status to the boolean
                 thisKeyPrefab.SetActive(prefab.Value);
                 //if value is false add to gameobject list
-                Debug.Assert(!prefab.Value, "prefabs value is coming true so it is being instantiated.");
+                Debug.Assert(!prefab.Value, "prefab's value is true so it is being instantiated.");
                 if (!prefab.Value) 
                 {
                     //we can't call addKey here bc it changes te keyData values, we just need to add it to the list bc it's here already in keyData
-                    //this.addKey(thisKeyPrefab);
                     keys.Add(thisKeyPrefab);
                 }
             }
             //hopefully this runs after all the addKey methods are completed, rem, this is only at start if key exists
             if (keyData.All(pairs => !pairs.Value))
             {
+                //we're going to glitch on this if we save before opening the door and want to do ceremonial door opening.
                 isBuilt = true;
             }
         }
