@@ -33,7 +33,7 @@ public class RandomEncounterBounce : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
 
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("encounterTrigger"))
         {
             Debug.Log("Random Encounter Triggered");
 
