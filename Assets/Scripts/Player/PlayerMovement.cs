@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] float characterSpeed = 4f;
     // Start is called before the first frame update
     public Transform PlayerT;
     public Animator anim;
@@ -44,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
             //Debug.Log(_spriteRenderer.sprite);
         }
     }
-    private void ProcessInputs() 
+    private void ProcessInputs()
     {
         hInput = Input.GetAxisRaw("Horizontal"); //* .1f;
         vInput = Input.GetAxisRaw("Vertical"); //* .1f;
@@ -54,7 +55,8 @@ public class PlayerMovement : MonoBehaviour
         if (hInput != 0 && vInput != 0)
         {
             speedVar = moveSpeed * .7f;
-        } else 
+        }
+        else
         {
             speedVar = moveSpeed;
         }
