@@ -69,8 +69,8 @@ public class InventoryManager : MonoBehaviour
             playerItem.Amount = (int)item["Amount"];
             inventory.Add(playerItem);
         }
-        Debug.Log("inventory list follows: ");
-        inventory.ForEach(item => Debug.Log(item));
+        /*Debug.Log("inventory list follows: ");
+        inventory.ForEach(item => Debug.Log(item));*/
     }
     public void AddToInv(PlayerItem item)
     {
@@ -92,5 +92,13 @@ public class InventoryManager : MonoBehaviour
         manager.Replace("Inventory", (System.Object)inventory);
         Debug.Log("replaced Inventory key with new list");
         dirty = true;
+    }
+    public List<HealthItem> GetHealthItems()
+    {
+        return inventory.Where(item => item is HealthItem).Select(item => (HealthItem)item).ToList();
+    }
+    public List<Weapon> GetWeaponItems()
+    {
+        return inventory.Where(item => item is Weapon).Select(item => (Weapon)item).ToList();
     }
 }

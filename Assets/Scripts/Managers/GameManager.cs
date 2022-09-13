@@ -34,10 +34,8 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        //we need to make this a task with a bool and get the bool to GetValues from other scripts
         //if we read both, the value gets set to 2 and than save data runs, which allows the data to be saved for next run, this only works with save data in the files.
         ReadPlayerData();
-        //ReadGameData();
     }
     //Data IO
     //**if we want to wait for a message saying the game is saved, we will need to do something similar to the read, make sure dirties are false;
@@ -50,7 +48,7 @@ public class GameManager : MonoBehaviour
             await Task.Run(() =>
             {
                 Debug.Log("Player Save Ran.");
-                //testable string, if it doesn't run in order make it a task<string> and wait for it to complete with result
+                //testable string
                 string jsonString = JsonConvert.SerializeObject(PlayerData, _options);
                 //re-write file
                 File.WriteAllText(savePath, jsonString);
@@ -134,14 +132,12 @@ public class GameManager : MonoBehaviour
     {
         //add key, value to game list
         GameData.Add(keyName, prop);
-        //this keeps the game data from saving if nothing has changed during the session
         gameDirty = true;
     }
     public void ReplaceData(string keyName, System.Object prop)
     {
         //add key, value to game list
         GameData[keyName] = prop;
-        //this keeps the game data from saving if nothing has changed during the session
         gameDirty = true;
     }
     //Get info from game data
@@ -165,22 +161,3 @@ public class GameManager : MonoBehaviour
  *	If you access items using an index, it is an ArrayList, and if you access items using a key , it is a Hashtable. 
  *	The collection of items is always sorted by the key value.
  */
-/*{
-	Player : {
-		Name: ,
-		Level: ,
-		Exp: ,
-		Position: ,
-		Health: ,
-	}
-	Inventory: [invArray]
-	Scene : {
-		peristed scene objects idk
-	}
-    Stats : {
-        EnemiesKilled: ,
-        DungeonsExplored: ,
-        BattlesPerVictory: ,
-        SpecialItemsFound: []
-    }
-}*/

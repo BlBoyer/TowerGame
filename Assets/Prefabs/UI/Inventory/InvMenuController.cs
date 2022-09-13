@@ -11,6 +11,7 @@ public class InvMenuController : MonoBehaviour
     public TMPro.TMP_Text nameCol;
     public TMPro.TMP_Text descCol;
     public TMPro.TMP_Text amtCol;
+    public TMPro.TMP_Text goldField;
     private List<string> names = new();
     private List<string> descriptions = new();
     private List<int> amounts = new();
@@ -30,8 +31,8 @@ public class InvMenuController : MonoBehaviour
         //set this menu inactive
         exitBtn.onClick.AddListener(() => gameObject.GetComponentInChildren<Canvas>().gameObject.SetActive(false));
         setItems();
-        //Type.GetType(name) use a switch and map the cases
-        /*public static Orientation ToOrientation(Direction direction) => direction switch
+        //Type.GetType(name) use a switch and map the cases to their section
+/*        public static Orientation ToOrientation(Direction direction) => direction switch
         {
             Direction.Up => Orientation.North,
             Direction.Right => Orientation.East,
@@ -39,13 +40,14 @@ public class InvMenuController : MonoBehaviour
             Direction.Left => Orientation.West,
             _ => throw new ArgumentOutOfRangeException(nameof(direction), $"Not expected direction value: {direction}"),
         };*/
+//need to coagulate items by name
         foreach (string name in names)
         {
             nameCol.text += name + '\n';
         }
         foreach (string descr in descriptions)
         {
-            /*Let's prefab a card object and bootstrap the menu*/
+            /*******************Let's prefab a card object and bootstrap the menu*******************************/
             //store in element hover child, or like an item card when selecting the item, which would also allow us to use or equip the item in its options
             //descCol.text += descr + '\n';
         }
@@ -83,12 +85,32 @@ public class InvMenuController : MonoBehaviour
         amounts.Clear();
         foreach (var item in manager.inventory) 
         {
-            names.Add(item.Name);
-            descriptions.Add(item.Description);
-            amounts.Add(item.Amount);
+            if (item is not Gold)
+            {
+                names.Add(item.Name);
+                descriptions.Add(item.Description);
+                amounts.Add(item.Amount);
+            }
+            else
+            {
+                goldField.text = item.Amount.ToString();
+            }
         }
         nameCol.text = "";
         descCol.text = "";
         amtCol.text = "";
     }
+    private void Coagulate() 
+    {
+        //put all items with same name together, do we really need them to be separate in inventory?
+        //manager.GetHealthItems();
+        //manager.GetWeaponItems();
+        //manager.GetWhatever
+    }
 }
+/*ITEM TYPES FOR AREAS*/
+/*
+ * Gold
+ * HealthItem
+ * Weapon
+ */

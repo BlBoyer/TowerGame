@@ -3,6 +3,10 @@ public abstract record PlayerItem
     public abstract string Name { get; protected set; }
     public abstract string Description { get; protected set; }
     public int Amount;
+    public override string ToString() 
+    {
+        return $"{Name} - {Description}";
+    }
 }
 //direct subclasses
 public record Gold : PlayerItem
