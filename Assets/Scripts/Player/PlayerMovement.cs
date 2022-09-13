@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 //mapbox unity sdk for 3D worlds
 
@@ -7,17 +8,22 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     public Transform PlayerT;
     public Animator anim;
-    [Range(0, 5)]
+    //public GameObject renderComponent;
+    private SpriteRenderer _spriteRenderer;
+    private Sprite[] _spriteLib;
+    private Sprite _thisSprite;
+    [Range(0, 9)]
     public int moveSpeed;
     private float speedVar;
     private float hInput;
     private float vInput;
-    private string walk_dir;
-    private int _playerHealth;
+    private string walk_dir = "player_idle";
+    //private int _playerHealth;
     void Start()
     {
-        _playerHealth = this.GetComponent<Fighter>().health;
-
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _spriteLib = GetComponentInChildren<SpriteLib>().spriteArray;
+        _thisSprite = _spriteLib[1];
     }
 
     // Update is called once per frame
@@ -26,20 +32,23 @@ public class PlayerMovement : MonoBehaviour
         ProcessInputs();
         if (hInput != 0 || vInput != 0)
         {
+            
+            anim.enabled = true;
             Move();
             Emote();
         }
-        else
+        else if (hInput == 0 && vInput == 0)
         {
-            anim.Play("player_idle");
-
+            anim.enabled = false;
+            //set Sprite here
+            _spriteRenderer.sprite = _thisSprite;
+            //Debug.Log(_spriteRenderer.sprite);
         }
-        //Debug.Log(_playerHealth);
     }
     private void ProcessInputs()
     {
-        hInput = Input.GetAxisRaw("Horizontal") * characterSpeed * Time.deltaTime;
-        vInput = Input.GetAxisRaw("Vertical") * characterSpeed * Time.deltaTime;
+        hInput = Input.GetAxisRaw("Horizontal"); //* .1f;
+        vInput = Input.GetAxisRaw("Vertical"); //* .1f;
     }
     private void Move()
     {
@@ -52,45 +61,38 @@ public class PlayerMovement : MonoBehaviour
             speedVar = moveSpeed;
         }
         var currentPos = new Vector3(PlayerT.position.x, PlayerT.position.y, PlayerT.position.z);
-        PlayerT.position = currentPos + new Vector3(hInput, vInput, 0) * speedVar;
+        PlayerT.position = currentPos + new Vector3(hInput, vInput, 0f) * speedVar * Time.deltaTime;
     }
     //change this so that if walking one direction and then change direction the current face direction doesn't change
     private void Emote()
     {
-        //get the current animation clip, if we're moving still
+        //get the current animation clip
         walk_dir = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-
-        //if we're stoppes, or going the same direction but with new diagonal input, play clip 
+        //horizontal input, ignore if up or down
 
         if (hInput > 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_right" && vInput != 0)
-            {
-                anim.Play("walk_right");
-            }
-
+            walk_dir = "walk_right";
+            _thisSprite = _spriteLib[2];
+            //Debug.Log(GetComponentInChildren<SpriteRenderer>().sprite.name);
         }
         else if (hInput < 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_left" && vInput != 0)
-            {
-                anim.Play("walk_left");
-            }
+            walk_dir = "walk_left";
+            _thisSprite = _spriteLib[0];
         }
+        //vertical movemente
         else if (vInput > 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_up" && hInput != 0)
-            {
-                anim.Play("walk_up");
-            }
+            walk_dir = "walk_up";
+            _thisSprite = _spriteLib[3];
         }
         else if (vInput < 0)
         {
-            if (walk_dir == "player_idle" || walk_dir == "walk_down" && hInput != 0)
-            {
-                anim.Play("walk_down");
-            }
+            walk_dir = "walk_down";
+            _thisSprite = _spriteLib[1];
         }
-
+        //if nothing changed play the last animation clip
+        anim.Play(walk_dir);
     }
 }

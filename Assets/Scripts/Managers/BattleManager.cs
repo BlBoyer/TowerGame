@@ -86,7 +86,7 @@ public class BattleManager : MonoBehaviour
     private void End() 
     {
     //the reason we have a sep method for setting the scene is to be able to check the scene we're in, once we have set it, we can access it
-        GameManager.instance.setScene(nextScene);
-        GameManager.instance.changeScene();
+        //ExitManager.setScene(nextScene);
+        //ExitManager.changeScene("VerticalSlice");
     }
 }
