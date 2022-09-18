@@ -65,10 +65,15 @@ public class ExitManager : MonoBehaviour
     }
     public void ChangeScene(string exitingScene) 
     {
+        /*unused parameter exitingScene may be useful later*/
 
         Debug.Log($"changing scene to: {currentScene}");
         //I changed from Async, to stop multiple scene changes on update
         SceneManager.LoadScene(currentScene, LoadSceneMode.Single);
+
+        /*Scene Initialization*/
+         //We need to do scene initialization here, load all game data prefabs with their current values, so we need a key with scene stuff in it
+
         //I don't know if the player shows on the prev scene, but maybe that doesn't matter
         //we can just set it's own position on awake tbh, rem, we still need to have player status somewhere persistent
         var posFloats = JsonConvert.DeserializeObject<float[]>(gameManager.GetGameInfo("Position").ToString());
@@ -77,5 +82,17 @@ public class ExitManager : MonoBehaviour
         GameObject player = Instantiate((GameObject)Resources.Load("Player"), pos, Quaternion.identity);
         player.name = "Player";
         Debug.Log("Does player exist?");
+    }
+    public void InitBattle(GameObject enemy)
+    {
+        //load a battle scene based on current scene or other variable with the enemy, we should have the prefab battlesystem object in every battle scene
+        SceneManager.LoadScene("verticalSliceBattle", LoadSceneMode.Single);
+        //find battlesystem object of the new scene and give the enemy parameter for it
+    }
+    public void ExitBattle()
+    {
+        //return to last loaded scene, since we haven't called setScene, we're good, unless we decided to setScene to  the gameover scene
+        ChangeScene("none");
+
     }
 }

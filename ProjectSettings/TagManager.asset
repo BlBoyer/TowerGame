@@ -11,6 +11,7 @@ TagManager:
   - InvMenu
   - RandomEncounter
   - encounterTrigger
+  - Enemy
   layers:
   - Default
   - TransparentFX
