@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +20,7 @@ public class GameMenuController : MonoBehaviour
         invMenu.SetActive(false);
         //add interactions, the inventory needs to have a special click handler for the consumable items that have onInteract methods to them,
         //so the onclick will need to find those methods from a static method list and run them based on item name
+
         invBtn.onClick.AddListener(() => invMenu.SetActive(!invMenu.activeSelf));
         saveBtn.onClick.AddListener(() => manager.SavePlayerData());
 

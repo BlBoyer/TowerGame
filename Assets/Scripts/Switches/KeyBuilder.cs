@@ -1,9 +1,7 @@
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 //the master key script, this should acutally create the Key instance to save in the game data
 //so, we give it  a key type, and make sure the key part matches that, or else we don't add it to the gameobject keys list, and we don't build this key with it

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 //mapbox unity sdk for 3D worlds
 
@@ -32,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
         ProcessInputs();
         if (hInput != 0 || vInput != 0)
         {
-            
+
             anim.enabled = true;
             Move();
             Emote();

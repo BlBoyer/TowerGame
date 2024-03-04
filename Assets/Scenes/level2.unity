@@ -123,6 +123,59 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &109839904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 109839906}
+  - component: {fileID: 109839905}
+  m_Layer: 0
+  m_Name: MapManager
+  m_TagString: Manager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &109839905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109839904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043744202a4850e449ea08f65ef29457, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 2015452851}
+  baseTile: {fileID: 11400000, guid: 1fb5259085d756c4fa2a4e48e37961c1, type: 2}
+  generationFieldSize: 20
+  playerTransform: {fileID: 1503931744}
+  Boundaries:
+    BoundaryNorth: {x: 0, y: 20000, z: 0}
+    BoundaryEast: {x: 10000, y: 0, z: 0}
+    BoundarySouth: {x: 0, y: -20000, z: 0}
+    BoundaryWest: {x: -10000, y: 0, z: 0}
+--- !u!4 &109839906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109839904}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.453208, y: 0.22832622, z: 3.551606}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &338595471
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5231301891188017748, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5231301891188017748, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
       propertyPath: m_LocalPosition.x
@@ -330,6 +383,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5231301891188017748, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6874765547755639836, guid: 69943728ff3075345a89dc0c93e58836, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1073,4 +1130,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89b4c642148d81a40a81daacd44e9b4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 0}

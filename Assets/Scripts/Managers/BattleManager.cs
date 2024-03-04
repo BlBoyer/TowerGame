@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /*This class is for a persistent gameobject that allows battles to start and stop in game*/

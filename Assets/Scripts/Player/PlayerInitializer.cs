@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInitializer : MonoBehaviour
@@ -14,8 +12,9 @@ public class PlayerInitializer : MonoBehaviour
     private void Start()
     {
         //initialize game menu listener
-        GameObject gameMenu = Instantiate(gameMenuPref, new Vector3(0,0,0), Quaternion.identity);
+        GameObject gameMenu = Instantiate(gameMenuPref, new Vector3(0, 0, 0), Quaternion.identity);
         gameMenu.name = "GameMenu";
+        Debug.Assert(gameMenu != null);
         //initialize inventory menu listener
         GameObject invMenu = Instantiate(invMenuPref, new Vector3(0, 0, 0), Quaternion.identity);
         invMenu.name = "InvMenu";

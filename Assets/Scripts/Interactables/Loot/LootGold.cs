@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //we should definitely abstract the loot class and have our diff types to pass in LootItem

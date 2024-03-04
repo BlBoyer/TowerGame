@@ -3,7 +3,7 @@ public abstract record PlayerItem
     public abstract string Name { get; protected set; }
     public abstract string Description { get; protected set; }
     public int Amount;
-    public override string ToString() 
+    public override string ToString()
     {
         return $"{Name} - {Description}";
     }
@@ -21,14 +21,13 @@ public record HealthItem : PlayerItem
     public int modifier;
 }
 //HealthItem subclasses
-public record Vial : HealthItem 
+public record Vial : HealthItem
 {
     public override string Name { get; protected set; } = "Vial"!;
-    //wtf does this do?
-    public override string Description { get => base.Description; protected set => base.Description = "A vial of health."; }
+    public override string Description { get; protected set; } = "A vial of health.";
     //use the modifier in code
 }
-public abstract record Weapon : PlayerItem 
+public abstract record Weapon : PlayerItem
 {
     public override string Name { get; protected set; }
     public override string Description { get; protected set; }

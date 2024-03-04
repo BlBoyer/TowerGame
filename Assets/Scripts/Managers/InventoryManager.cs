@@ -28,12 +28,12 @@ public class InventoryManager : MonoBehaviour
         //get data from GameManager - PlayerItems key, KeyList, miscItemLisT
         manager = GameObject.FindWithTag("Manager").GetComponent<GameManager>();
         //gameManager array needs to have keys created, the question is, can we do without this??
-        Task.Run(() => 
+        Task.Run(() =>
         {
             int status = 3;
             while (manager.getStatus() < status)
             {
-                Debug.Log("inv task ran "+ manager.getStatus());
+                Debug.Log("inv task ran " + manager.getStatus());
                 if (manager.getStatus() == 2)
                 {
                     Debug.Log("getting inv");
@@ -41,7 +41,7 @@ public class InventoryManager : MonoBehaviour
                     status = 2;
                     completed = true;
                 }
-                if (completed) 
+                if (completed)
                 {
                     Debug.Log("inv get data task is complete");
                     break;
@@ -83,11 +83,16 @@ public class InventoryManager : MonoBehaviour
             updateItem.Amount += item.Amount;
             Debug.Log(updateItem);
         }
-        else if (item.Amount > 0 || item.Amount < 1 && !(inventory.Contains(item)))
+        else if ((item.Amount > 0 || item.Amount < 1) && !inventory.Contains(item)) //Todo: think about this
         {//Non-Stackable items, and single items
             inventory.Add(item);
+            Debug.Log($"{item.Amount} {item.Name} added to your inventory!");
         }
-        Debug.Log($"{item.Amount} {item.Name} added to your inventory!");
+        else
+        {
+            Debug.Log($"{item.Amount} {item.Name} cannot be added to your inventory!");
+            return;
+        }
         //update inventory key in game manager, AddProp sets playerDirty true
         manager.Replace("Inventory", (System.Object)inventory);
         Debug.Log("replaced Inventory key with new list");
