@@ -51,9 +51,6 @@ public class MapManager : MonoBehaviour
         {
             //back out if tile exist, ToDo: remove cells leaving field size. We need bounding size to know when to not generate
             //so when we begin generating, we need to store a world position so that we can enter and leave generating scene at the correct time(this may be variable of course).
-
-            //add base tile in every square that is i distance from player (circular array)
-            //get offset tiles
             var surroundingTiles = await GetSurroundingTileCellsByReference(playerCell, i);
             await FillTileArray(surroundingTiles, true, baseTile);
             Debug.Log("Tiles should be painted");
@@ -61,13 +58,15 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets the Tilemap cell positions relative to specified world position with the specified tile.
+    /// Gets the sqaure outline of Tilemap cell positions up to distance of the offset, relative to specified reference position of the specified tile.
     /// </summary>
     /// <param name="referencePosition"></param>
     /// <param name="offset">The magnitude of vector offset, relative to the reference position.</param>
     /// <returns>Vector3Int[]</returns>
     public async Task<Vector3Int[]> GetSurroundingTileCellsByReference(Vector3Int referencePosition, int offset)
     {
+        //ToDo:: we should not repeat for multiple cells because the corners are reused for each line
+        //for i = 1 there should be 3 cells (add the reference cell [1], plus the distance x2 [either side of the reference])
         var lineLength = offset * 2 + 1;
         Vector3Int[] cellPositionValues = new Vector3Int[lineLength * 4];
         Vector3Int[] xValues = new Vector3Int[lineLength];
@@ -75,19 +74,19 @@ public class MapManager : MonoBehaviour
         Vector3Int[] xNegValues = new Vector3Int[lineLength];
         Vector3Int[] yNegValues = new Vector3Int[lineLength];
 
-        for (int i = lineLength; i > 0; i--)
+        for (int i = 0; i < lineLength; i++)
         {
-            xValues[lineLength - i] = new Vector3Int(i, referencePosition.y + offset);
-            xNegValues[lineLength - i] = new Vector3Int(i, referencePosition.y - offset);
-            yValues[lineLength - i] = new Vector3Int(referencePosition.x + offset, i);
-            yNegValues[lineLength - i] = new Vector3Int(referencePosition.x + offset, i);
+            var indexOfOffset = i - offset;
+            xValues[i] = new Vector3Int(referencePosition.x + indexOfOffset, referencePosition.y + offset);
+            xNegValues[i] = new Vector3Int(referencePosition.x + indexOfOffset, referencePosition.y - offset);
+            yValues[i] = new Vector3Int(referencePosition.x + offset, referencePosition.y + indexOfOffset);
+            yNegValues[i] = new Vector3Int(referencePosition.x - offset, referencePosition.y + indexOfOffset);
         }
 
-        Debug.Log("copy error");
         xValues.CopyTo(cellPositionValues, 0);
         yValues.CopyTo(cellPositionValues, lineLength);
-        xValues.CopyTo(cellPositionValues, lineLength * 2);
-        xValues.CopyTo(cellPositionValues, lineLength * 3);
+        xNegValues.CopyTo(cellPositionValues, lineLength * 2);
+        yNegValues.CopyTo(cellPositionValues, lineLength * 3);
 
         return cellPositionValues;
     }
