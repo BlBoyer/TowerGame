@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 #nullable enable
 
+//Todo: investigate using box fill, as it seems to be what you want, but make sure it doesn't fill over existing tiles, since we don't want to do this
 public class MapManager : MonoBehaviour
 {
     //need to have a tile set to use for generation
@@ -34,6 +36,8 @@ public class MapManager : MonoBehaviour
         {
             startingPosition = playerTransform.position;
         }
+        //fill player tile
+        tilemap.SetTile(tilemap.WorldToCell(playerTransform.position), baseTile);
     }
 
     async void Update()
@@ -53,12 +57,12 @@ public class MapManager : MonoBehaviour
             //so when we begin generating, we need to store a world position so that we can enter and leave generating scene at the correct time(this may be variable of course).
             var surroundingTiles = await GetSurroundingTileCellsByReference(playerCell, i);
             await FillTileArray(surroundingTiles, true, baseTile);
-            Debug.Log("Tiles should be painted");
         }
+        await ClearExoTiles(playerCell);
     }
 
     /// <summary>
-    /// Gets the sqaure outline of Tilemap cell positions up to distance of the offset, relative to specified reference position of the specified tile.
+    /// Gets a square outline of Tilemap cell positions up to distance of the offset, relative to specified reference position of the specified tile.
     /// </summary>
     /// <param name="referencePosition"></param>
     /// <param name="offset">The magnitude of vector offset, relative to the reference position.</param>
@@ -125,8 +129,34 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public async Task ClearExoTiles()
+    public async Task ClearExoTiles(Vector3Int reference)
     {
-        throw new NotImplementedException();
+        //get 1 square outside of current field size and erase all 4 lines
+        //we must make sure we do not delete anything outside of the whole field boundary
+        var surroundingTiles = await GetSurroundingTileCellsByReference(reference, this.generationFieldSize + 1);
+        await ClearTiles(surroundingTiles, baseTile);
+    }
+
+    /// <summary>
+    /// Deletes all Tilemap cells in supplied array with the specified tile.
+    /// </summary>
+    /// <param name="cellPositions">The array of cell positions to fill.</param>
+    /// <param name="fillTile">The tile to use when filling cells.</param>
+    /// <returns>Task</returns>
+    public async Task ClearTiles(Vector3Int[] cellPositions, Tile? deleteTile)
+    {
+        var cellsToClear = cellPositions;
+
+        if (deleteTile is not null)
+        {
+            cellsToClear = cellsToClear.Where(c => tilemap.GetTile(c) == deleteTile).ToArray();
+        }
+
+        cellsToClear = cellsToClear.Where(c => tilemap.HasTile(c)).ToArray();
+
+        foreach (var cell in cellsToClear)
+        {
+            tilemap.SetTile(cell, null);
+        }
     }
 }
