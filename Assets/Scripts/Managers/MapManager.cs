@@ -20,7 +20,7 @@ public class MapManager : MonoBehaviour
     /// Position boundary trigger points for exiting the scene.
     /// </summary>
     public int generationFieldSize = 5;
-    public Transform playerTransform;
+    private Transform? referenceTransform;
     /// <summary>
     /// This position is the trigger point for exiting to previous scene.
     /// </summary>
@@ -28,14 +28,17 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
+        if (referenceTransform is null)
+            referenceTransform = GameObject.FindWithTag("Player").transform;
+
         tilemap.ClearAllTiles();
 
         if (startPosition is null)
         {
-            startingPosition = playerTransform.position;
+            startingPosition = referenceTransform.position;
         }
-        //fill player tile
-        tilemap.SetTile(tilemap.WorldToCell(playerTransform.position), baseTile);
+        //fill reference tile
+        tilemap.SetTile(tilemap.WorldToCell(referenceTransform.position), baseTile);
     }
 
     async void Update()
@@ -45,18 +48,18 @@ public class MapManager : MonoBehaviour
 
     private async Task GenerateBaseArea()
     {
-        if (!playerTransform.position.IsWithinBounds(this.Boundaries))
+        if (!referenceTransform.position.IsWithinBounds(this.Boundaries))
             return;
 
-        var playerCell = tilemap.WorldToCell(playerTransform.position);
+        var referenceCell = tilemap.WorldToCell(referenceTransform.position);
         for (int i = 1; i <= generationFieldSize; i++)
         {
             //back out if tile exist, ToDo: remove cells leaving field size. We need bounding size to know when to not generate
             //so when we begin generating, we need to store a world position so that we can enter and leave generating scene at the correct time(this may be variable of course).
-            var surroundingTiles = await GetSurroundingTileCellsByReference(playerCell, i);
+            var surroundingTiles = await GetSurroundingTileCellsByReference(referenceCell, i);
             await FillTileArray(surroundingTiles, true, baseTile);
         }
-        await ClearExoTiles(playerCell);
+        await ClearExoTiles(referenceCell);
     }
 
     /// <summary>

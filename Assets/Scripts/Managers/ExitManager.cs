@@ -24,12 +24,12 @@ public class ExitManager : MonoBehaviour
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         invManager = GameObject.FindGameObjectWithTag("Inventory").GetComponent<InventoryManager>();
-        Task.Run(() => 
+        Task.Run(() =>
         {
-            while (isCompleted == false) 
+            while (isCompleted == false)
             {
                 Debug.Log("exit controller task running");
-                if (invManager.completed) 
+                if (invManager.completed)
                 {
                     //get scene data
                     Debug.Log("getting scene");
@@ -43,7 +43,7 @@ public class ExitManager : MonoBehaviour
             }
         });
     }
-    void Update() 
+    void Update()
     {
         if (isCompleted = true && SceneManager.GetActiveScene().name == "MainMenu" && currentScene == "VerticalSlice")
         {
@@ -51,18 +51,18 @@ public class ExitManager : MonoBehaviour
             ChangeScene("MainMenu");
         }
     }
-    public void SetScene(string name) 
+    public void SetScene(string name)
     {
         if (scenes.Contains(name))
         {
             currentScene = name;
         }
-        else 
+        else
         {
             Debug.LogError("Scene doesn't exist");
         }
     }
-    public void ChangeScene(string exitingScene) 
+    public void ChangeScene(string exitingScene)
     {
         /*unused parameter exitingScene may be useful later*/
 
@@ -71,16 +71,17 @@ public class ExitManager : MonoBehaviour
         SceneManager.LoadScene(currentScene, LoadSceneMode.Single);
 
         /*Scene Initialization*/
-         //We need to do scene initialization here, load all game data prefabs with their current values, so we need a key with scene stuff in it
+        //We need to do scene initialization here, load all game data prefabs with their current values, so we need a key with scene stuff in it
 
         //I don't know if the player shows on the prev scene, but maybe that doesn't matter
         //we can just set it's own position on awake tbh, rem, we still need to have player status somewhere persistent
+        if (GameObject.FindGameObjectWithTag("Player") is not null)
+            return;
         var posFloats = JsonConvert.DeserializeObject<float[]>(gameManager.GetGameInfo("Position").ToString());
         //need to auto-deserialize these field when getting the info, this is ridiculous
         var pos = new Vector3(posFloats[0], posFloats[1], posFloats[2]);
         GameObject player = Instantiate((GameObject)Resources.Load("Player"), pos, Quaternion.identity);
         player.name = "Player";
-        Debug.Log("Does player exist?");
     }
     public void InitBattle(GameObject enemy)
     {

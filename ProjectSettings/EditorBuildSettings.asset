@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/VerticalSlice.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/level2.unity
-    guid: 77643e2165eb7e240a62929e799c0897
+    path: Assets/Procedural_Earth.unity
+    guid: d530d7544808ef0489024d23348bd652
   m_configObjects: {}
